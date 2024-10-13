@@ -16,6 +16,10 @@ const navigate = useNavigate()
   async function handleLogin(e) {
     e.preventDefault();
     const response = await fetch('/api/login', {
+              headers: {
+          Accept: 'application/json',
+          "Content-Type": 'application/json'
+        },
       method: 'post',
       body: JSON.stringify(formData),
     });

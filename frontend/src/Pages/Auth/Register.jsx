@@ -24,6 +24,10 @@ export default function Register() {
   async function handleRegister(e) {
     e.preventDefault();
     const response = await fetch("/api/register", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       method: "post",
       body: JSON.stringify(formData),
     });
@@ -46,7 +50,10 @@ export default function Register() {
     <>
       <h1 className="title">Regisztráció</h1>
 
-      <form onSubmit={handleRegister} className=" flex flex-col items-center w-1/3 mx-auto space-y-3">
+      <form
+        onSubmit={handleRegister}
+        className=" flex flex-col items-center w-1/3 mx-auto space-y-3"
+      >
         <div className="w-full">
           <input
             className={inputFieldStyle}
@@ -150,7 +157,9 @@ export default function Register() {
             <p className="error">{errors.street_number}</p>
           )}
         </div>
-        <button className="text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3">Regisztráció</button>
+        <button className="text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3">
+          Regisztráció
+        </button>
       </form>
     </>
   );
