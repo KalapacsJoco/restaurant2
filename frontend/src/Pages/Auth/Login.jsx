@@ -33,7 +33,7 @@ const navigate = useNavigate()
     } else {
         localStorage.setItem('token', data.token)
         setToken(data.token)
-        navigate("/")
+        navigate("/dishes")
     }
 
   }

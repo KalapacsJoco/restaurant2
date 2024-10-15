@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { AppContext } from "./Context/AppContext";
 import CreateDish from "./Pages/Dishes/CreateDish";
 import Index from "./Pages/Dishes/Index";
+import Order from "./Pages/Order";
 // import Create from "./Pages/Posts/Create";
 
 export default function App() {
@@ -22,6 +23,7 @@ const {user} = useContext(AppContext)
         <Route path="/login" element={user ? <Home/> : <Login/>} />
         <Route path="/createDish" element={<CreateDish/>} />
         <Route path="/dishes" element={<Index/>} />
+        <Route path="/order" element={<Order/>} />
         {/* <Route path="/dishes/:id" element={<CreateDishModal />} /> */}
 
         </Route>

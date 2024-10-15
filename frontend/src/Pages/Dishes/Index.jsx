@@ -8,6 +8,8 @@ function Dishes() {
   const user = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
   const [selectedDish, setSelectedDish] = useState(null); // Kiválasztott étel
+  const {setCart} = useContext(AppContext)
+
 
   useEffect(() => {
     const fetchDishes = async () => {
@@ -27,6 +29,32 @@ function Dishes() {
     setOpenModal(true); // Modal megnyitása
   };
 
+  const addToCart = (dish) => {
+    setCart((prevCart) => {
+      // Ellenőrizzük, hogy az adott dish már benne van-e a cart-ban
+      if (prevCart[dish.id]) {
+        // Ha létezik, csak növeljük a qty értékét
+        return {
+          ...prevCart,
+          [dish.id]: {
+            ...prevCart[dish.id],  // Megtartjuk a meglévő dish tulajdonságokat
+            qty: prevCart[dish.id].qty + 1, // Növeljük a qty értékét
+          },
+        };
+      } else {
+        // Ha nem létezik, adjuk hozzá qty: 1 értékkel
+        return {
+          ...prevCart,
+          [dish.id]: {
+            ...dish,  // Az összes dish tulajdonságot átvesszük
+            qty: 1,  // Új termék esetén qty-t 1-re állítjuk
+          },
+        };
+      }
+    });
+  };
+  
+
   return (
     <div className="flex justify-center w-1/2">
       <h1>Ételek</h1>
@@ -42,7 +70,8 @@ function Dishes() {
               <h2 className="text-lg font-bold">{dish.name}</h2>
               <p>{dish.description}</p>
               <p>{dish.price} RON</p>
-              {user && <button>Kosárba</button>}
+              {user && <button onClick={() => addToCart(dish)}>Kosárba </button>
+            }
               <button onClick={() => handleEditClick(dish)}>Módosítás</button>
             </div>
           </li>

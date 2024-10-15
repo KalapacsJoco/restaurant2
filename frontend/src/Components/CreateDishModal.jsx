@@ -1,17 +1,19 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 export default function CreateDishModal({ show, closeModal, dish }) {
-    console.log(dish.id)
-    console.log(`/api/dishes/${dish.id}`)
-  if (!show) return null;
-
-  // Győződj meg róla, hogy a dish objektum létezik és van id-je
+  console.log(dish?.id);
+  console.log(`/api/dishes/${dish?.id}`);
   const [formData, setFormData] = useState({
     name: dish?.name || '',
     description: dish?.description || '',
     price: dish?.price || '',
     image: dish?.image || ''
   });
+
+  if (!show) return null;
+
+
 
   const handleChange = (e) => {
     if (e.target.name === 'image' && e.target.files) {
@@ -22,8 +24,7 @@ export default function CreateDishModal({ show, closeModal, dish }) {
     } else {
       setFormData({
         ...formData,
-        [e.target.name]: e.target.value,  
-  
+        [e.target.name]: e.target.value,
       });
     }
   };
@@ -31,7 +32,6 @@ export default function CreateDishModal({ show, closeModal, dish }) {
   async function submitForm(e) {
     e.preventDefault();
 
-    // Győződj meg róla, hogy van `dish` és `dish.id`
     if (!dish || !dish.id) {
       console.error("Az étel nem található");
       return;
@@ -40,24 +40,19 @@ export default function CreateDishModal({ show, closeModal, dish }) {
     const formDataObj = new FormData();
     formDataObj.append('name', formData.name);
     formDataObj.append('description', formData.description);
-    formDataObj.append('image', formData.image); 
+    formDataObj.append('image', formData.image);
     formDataObj.append('price', formData.price);
 
-    // Fetch kérés az ID dinamikus használatával
-
     try {
-    const response = await fetch(`/api/dishes/${dish.id}`, {
-      method: "PUT",
-      body: formDataObj,
-    })
-    const data = await response.json;
-    console.dir(data);
-  } catch (e) {
-    console.log(e + 'catch')
-  }
-
-
-
+      const response = await fetch(`/api/dishes/${dish.id}`, {
+        method: "PUT",
+        body: formDataObj,
+      });
+      const data = await response.json();
+      console.dir(data);
+    } catch (e) {
+      console.log(e + 'catch');
+    }
   }
 
   return (
@@ -117,3 +112,22 @@ export default function CreateDishModal({ show, closeModal, dish }) {
     </div>
   );
 }
+
+// PropTypes beállítása
+CreateDishModal.propTypes = {
+  show: PropTypes.bool.isRequired,      // show mindig bool típusú kell legyen
+  closeModal: PropTypes.func.isRequired, // closeModal egy függvény kell legyen
+  dish: PropTypes.shape({               // dish egy objektum, ami tartalmazza a következőket
+    id: PropTypes.oneOfType([            // id lehet string vagy szám
+      PropTypes.string,
+      PropTypes.number,
+    ]),
+    name: PropTypes.string,              // name egy string
+    description: PropTypes.string,       // description egy string
+    price: PropTypes.oneOfType([         // price lehet string vagy szám
+      PropTypes.string,
+      PropTypes.number,
+    ]),
+    image: PropTypes.string,             // image egy string
+  }),
+};

@@ -1,12 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
 import { useContext } from "react";
+import { useLocation } from 'react-router-dom';
 
 export function Navbar() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const { user, setUser, token, setToken } = useContext(AppContext);
+  const { user, setUser, token, setToken, cart } = useContext(AppContext);
   const buttonStyle =
     "text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3";
+
+  const totalQty = Object.values(cart).reduce((total, dish) => {
+    return total + (dish.qty || 0); // Biztosítjuk, hogy ha nincs qty, akkor 0-t adjon
+  }, 0);
 
   async function handleLogout(e) {
     e.preventDefault();
@@ -39,11 +45,19 @@ export function Navbar() {
           {user ? (
             <div className="flex">
               <div>Üdv újra {user.first_name}</div>
-              <Link>Kosár tartalma</Link>
+              {location.pathname === "/dishes" ? (
+                <Link to="/order">
+                  Kosár tartalma <span>{totalQty}</span>
+                </Link>
+              ) : (
+                <Link to="/dishes">
+                  Vissza az ételekhez
+                </Link>
+              )}
 
-              <button className="button-52" role="button">
+              {/* <button className="button-52" role="button">
                 Button 52
-              </button>
+              </button> */}
               <form onSubmit={handleLogout}>
                 <button className={buttonStyle}> Kijelentkezés</button>
               </form>
