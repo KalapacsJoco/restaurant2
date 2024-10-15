@@ -5,7 +5,8 @@ import { useContext } from "react";
 export function Navbar() {
   const navigate = useNavigate();
   const { user, setUser, token, setToken } = useContext(AppContext);
-  const buttonStyle = 'text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3';
+  const buttonStyle =
+    "text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3";
 
   async function handleLogout(e) {
     e.preventDefault();
@@ -38,14 +39,23 @@ export function Navbar() {
           {user ? (
             <div className="flex">
               <div>Üdv újra {user.first_name}</div>
+              <Link>Kosár tartalma</Link>
+
+              <button className="button-52" role="button">
+                Button 52
+              </button>
               <form onSubmit={handleLogout}>
                 <button className={buttonStyle}> Kijelentkezés</button>
               </form>
             </div>
           ) : (
             <div>
-              <Link to="/login" className={buttonStyle}>Login</Link>
-              <Link to="/register" className={buttonStyle}>Register</Link>
+              <Link to="/login" className={buttonStyle}>
+                Login
+              </Link>
+              <Link to="/register" className={buttonStyle}>
+                Register
+              </Link>
             </div>
           )}
         </nav>

@@ -15,3 +15,4 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::get('/dishes', [DishController::class, 'index']);
 Route::post('/dishes', [DishController::class, 'store']);
+Route::put('/dishes/{dish}', [DishController::class, 'update']);

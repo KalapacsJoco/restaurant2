@@ -39,7 +39,7 @@ export default function CreateDish() {
    }
   });
   const data = await response.json();
-  console.log(data);
+  console.log(data)
  }
  return (
   <form onSubmit={submitForm}>

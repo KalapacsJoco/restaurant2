@@ -13,7 +13,9 @@ class DishController extends Controller
     public function index()
     {
         $dishes = Dish::all();
-        return view('dishes.index', compact('dishes'));
+
+        return $dishes;
+     
     }
 
     /**
@@ -21,38 +23,30 @@ class DishController extends Controller
      */
     public function store(Request $request)
     {
-        // Adatok validálása
-        $validated = $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'required|max:255',
-            // 'image' => 'required|image',
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
             'price' => 'required|numeric',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
-        // Új dish objektum létrehozása és adatok feltöltése
-        $dish = new Dish;
-        $dish->name = $validated['name'];
-        $dish->description = $validated['description'];
-        $dish->price = $validated['price'];
-    
-        // Ha van kép, mentése
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/dishes', $imageName); // Mentés a public/dishes könyvtárba
-            $dish->image = 'storage/dishes/' . $imageName; // Az adatbázisban tárolt elérési út
+
+        if ($request->file('image')) {
+            $imagePath = $request->file('image')->store('dishes', 'public');
         }
-    
-        // Adatok mentése az adatbázisba
-        $dish->save();
-    
-        // Visszatérési érték (pl. JSON válasz)
+
+        $dish = Dish::create([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'image' => $imagePath, // Store the image path
+        ]);
+
         return [
             'message' => 'Minden fasza',
             'dish' => $dish
         ];
     }
-    
+
 
 
     /**
@@ -66,10 +60,46 @@ class DishController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Dish $dish)
     {
-        //
+        // Kérés validálása
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        // Kép frissítése, ha szükséges
+        if ($request->file('image')) {
+            $imagePath = $request->file('image')->store('dishes', 'public');
+        }
+    
+        // Frissítjük a dish adatokat
+        $dish->update([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'image' => $imagePath ?? $dish->image, // Csak akkor frissítjük, ha új kép van
+        ]);
+    
+        // return response()->json([
+        //     'message' => 'Dish updated successfully', //megvizsgalni a foto kuldeset 
+        //     'dish' => $dish
+        // ]);
+
+        return response()->json([
+            'message' => 'Dish updated successfully',
+            'dish' => [
+                'name' => $dish->name,
+                'description' => $dish->description,
+                'image' => base64_encode(file_get_contents($dish->imagePath)),
+                'price' => $dish->price
+            ]
+        ]);
     }
+    
+    
 
     /**
      * Remove the specified resource from storage.
