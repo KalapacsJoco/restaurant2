@@ -13,7 +13,6 @@ import Order from "./Pages/Order";
 
 export default function App() {
 const {user} = useContext(AppContext)
-
   return (
     <BrowserRouter>
       <Routes>

@@ -6,7 +6,10 @@ export default function AppProvider({ children }) {
     const [token, setToken] = useState(localStorage.getItem('token'))
     // console.log(localStorage.getItem('token'))
     const [user, setUser] = useState(null);
-    const [cart, setCart] = useState({})
+    const [cart, setCart] = useState(() => {
+        const savedCart = localStorage.getItem('cart');
+        return savedCart ? JSON.parse(savedCart) : {};
+    });
 
     async function getUser() {
         if (!token) return;
@@ -33,6 +36,10 @@ export default function AppProvider({ children }) {
             getUser();
         }
     }, [token]);
+
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }, [cart]);
 
     return (
         <AppContext.Provider value={{ token, setToken, user, setUser, cart, setCart }}>

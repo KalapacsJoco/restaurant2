@@ -1,16 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../Context/AppContext";
 
 function Order() {
-  const { cart, user } = useContext(AppContext); // Hozzáférünk a user és cart objektumokhoz
+  const { cart, user } = useContext(AppContext);
+  const [qty, setQty] = useState(cart.qty)
+  console.log(qty)
+
 
   return (
     <>
-      <section className="text-gray-100"> 
-        <article className="flex flex-col text-gray-100 w-50">
+      <section className="flex text-gray-100 w-full h-1/2">
+        <article className="flex flex-col text-gray-100 w-1/2 justify-center items-center">
           <h1>Rendelés</h1>
           <div>
-            <table>
+            <table className="table-auto">
               <thead>
                 <tr>
                   <th>Sorszám</th>
@@ -23,31 +26,42 @@ function Order() {
               <tbody>
                 {Object.entries(cart).map(([key, item], index) => (
                   <tr key={key}>
-                    <td>{index + 1}</td> {/* Sorszám */}
-                    <td>{item.name}</td> {/* Étel neve */}
-                    <td>{item.qty}</td> {/* Mennyiség */}
-                    <td>{item.price} Ft</td> {/* Ár */}
-                    <td>{item.price * item.qty} Ft</td> {/* Összesen */}
+                    <td>{index + 1}</td>
+                    <td>{item.name}</td>
+                    <td><input 
+                      type="text"
+                      onChange={(e) => {
+                        setQty( e.target.value)
+                      }}
+                      value={qty}
+                    /></td>
+                    <td>{item.price} Ft</td>
+                    <td>{item.price * item.qty} Ft</td>
+                    <td><button>Törlés</button></td>
                   </tr>
-                ))}
+                )
+                )}
+                <tr>
+                  <td colSpan="4" className="text-right font-bold">Összesen:</td>
+                  <td>Ft</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </article>
 
-        <article>
-          {/* Ellenőrizzük, hogy a user létezik-e, mielőtt megjelenítjük az adatait */}
+        <article className="flex flex-col text-gray-100 w-1/2 justify-center items-center">
           {user ? (
             <>
-              <ul>{user.first_name}</ul>
-              <ul>{user.last_name}</ul>
-              <ul>{user.email}</ul>
-              <ul>{user.phone}</ul>
-              <ul>{user.street}</ul>
-              <ul>{user.street_number}</ul>
+              <ul>Név: {user.first_name + ' ' + user.last_name}</ul>
+              <ul>Email: {user.email}</ul>
+              <ul>Telefonszám: {user.phone}</ul>
+              <ul>Utca: {user.street}</ul>
+              <ul>Házszám: {user.street_number}</ul>
+              <button className="mt-4 p-2 bg-blue-500 text-white rounded">Módosítás</button>
             </>
           ) : (
-            <p>Nincs felhasználói adat.</p> // Hiba esetén vagy ha a user nem létezik
+            <p>Nincs felhasználói adat.</p>
           )}
         </article>
       </section>
