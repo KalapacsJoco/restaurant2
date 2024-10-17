@@ -8,8 +8,8 @@ function Dishes() {
   const user = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
   const [selectedDish, setSelectedDish] = useState(null); // Kiválasztott étel
-  const {setCart} = useContext(AppContext)
-
+  const { setCart } = useContext(AppContext);
+  const [qty, setQty] = useState({}); // Store qty as an object with dish IDs as keys
 
   useEffect(() => {
     const fetchDishes = async () => {
@@ -30,30 +30,34 @@ function Dishes() {
   };
 
   const addToCart = (dish) => {
-    setCart((prevCart) => {
-      // Ellenőrizzük, hogy az adott dish már benne van-e a cart-ban
-      if (prevCart[dish.id]) {
-        // Ha létezik, csak növeljük a qty értékét
-        return {
-          ...prevCart,
-          [dish.id]: {
-            ...prevCart[dish.id],  // Megtartjuk a meglévő dish tulajdonságokat
-            qty: prevCart[dish.id].qty + 1, // Növeljük a qty értékét
-          },
-        };
-      } else {
-        // Ha nem létezik, adjuk hozzá qty: 1 értékkel
-        return {
-          ...prevCart,
-          [dish.id]: {
-            ...dish,  // Az összes dish tulajdonságot átvesszük
-            qty: 1,  // Új termék esetén qty-t 1-re állítjuk
-          },
-        };
-      }
-    });
+    const dishQty = qty[dish.id] || 0; // Get the current quantity of the dish, default to 0 if not set
+    if (dishQty > 0) { // Only add to cart if quantity is greater than 0
+      setCart((prevCart) => {
+        // Ellenőrizzük, hogy az adott dish már benne van-e a cart-ban
+        if (prevCart[dish.id]) {
+          // Ha létezik, csak növeljük a qty értékét
+          return {
+            ...prevCart,
+            [dish.id]: {
+              ...prevCart[dish.id], // Megtartjuk a meglévő dish tulajdonságokat
+              qty: prevCart[dish.id].qty + dishQty, // Növeljük a qty értékét
+            },
+          };
+        } else {
+          // Ha nem létezik, adjuk hozzá a qty értékkel
+          return {
+            ...prevCart,
+            [dish.id]: {
+              ...dish, // Az összes dish tulajdonságot átvesszük
+              qty: dishQty, // Új termék esetén qty-t hozzáadjuk
+            },
+          };
+        }
+      });
+    } else {
+      console.warn("Hibás mennyiség");
+    }
   };
-  
 
   return (
     <div className="flex justify-center w-1/2">
@@ -70,8 +74,26 @@ function Dishes() {
               <h2 className="text-lg font-bold">{dish.name}</h2>
               <p>{dish.description}</p>
               <p>{dish.price} RON</p>
-              {user && <button onClick={() => addToCart(dish)}>Kosárba </button>
-            }
+              {user && (
+                <div>
+                  <span>
+                    <input
+                      type="number"
+                      value={qty[dish.id] || 0} // Get the qty for this dish, or default to 0
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        setQty((prevQty) => ({
+                          ...prevQty,
+                          [dish.id]: value, // Update qty for this specific dish
+                        }));
+                      }}
+                    />
+                  </span>
+                  <button className="text-gray-100" onClick={() => addToCart(dish)}>
+                    Kosárba
+                  </button>
+                </div>
+              )}
               <button onClick={() => handleEditClick(dish)}>Módosítás</button>
             </div>
           </li>

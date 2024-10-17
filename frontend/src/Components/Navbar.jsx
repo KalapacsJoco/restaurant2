@@ -30,6 +30,7 @@ export function Navbar() {
     if (res.ok) {
       setUser(null);
       setToken(null);
+      localStorage.removeItem("cart");
       localStorage.removeItem("token");
       navigate("/");
     }

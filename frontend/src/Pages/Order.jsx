@@ -3,8 +3,15 @@ import { AppContext } from "../Context/AppContext";
 
 function Order() {
   const { cart, user } = useContext(AppContext);
-  const [qty, setQty] = useState(cart.qty)
-  console.log(qty)
+  const [qty, setQty] = useState(() => {
+    // Initialize qty state by extracting qty from each cart item
+    const initialQty = {};
+    Object.keys(cart).forEach((id) => {
+      initialQty[id] = cart[id].qty; // Extract the qty from each item
+    });
+    return initialQty;
+  });
+    console.log(qty)
 
 
   return (
@@ -30,10 +37,10 @@ function Order() {
                     <td>{item.name}</td>
                     <td><input 
                       type="text"
+                      value={item.qty}
                       onChange={(e) => {
                         setQty( e.target.value)
                       }}
-                      value={qty}
                     /></td>
                     <td>{item.price} Ft</td>
                     <td>{item.price * item.qty} Ft</td>
