@@ -31,7 +31,8 @@ function Dishes() {
 
   const addToCart = (dish) => {
     const dishQty = qty[dish.id] || 0; // Get the current quantity of the dish, default to 0 if not set
-    if (dishQty > 0) { // Only add to cart if quantity is greater than 0
+    if (dishQty > 0) {
+      // Only add to cart if quantity is greater than 0
       setCart((prevCart) => {
         // Ellenőrizzük, hogy az adott dish már benne van-e a cart-ban
         if (prevCart[dish.id]) {
@@ -64,7 +65,10 @@ function Dishes() {
       <h1>Ételek</h1>
       <ul className="flex flex-col w-full">
         {dishes.map((dish) => (
-          <li key={dish.id} className="flex flex-row items-center gap-4 justify-between border">
+          <li
+            key={dish.id}
+            className="flex flex-row items-center gap-4 justify-between border"
+          >
             <img
               src={`etterem//backend/storage/app/public/${dish.image}`}
               alt={dish.name}
@@ -89,9 +93,14 @@ function Dishes() {
                       }}
                     />
                   </span>
-                  <button className="text-gray-100" onClick={() => addToCart(dish)}>
-                    Kosárba
-                  </button>
+                  {user && (
+                    <button
+                      className="text-gray-100"
+                      onClick={() => addToCart(dish)}
+                    >
+                      Kosárba
+                    </button>
+                  )}
                 </div>
               )}
               <button onClick={() => handleEditClick(dish)}>Módosítás</button>

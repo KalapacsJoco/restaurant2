@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
 
 function Order() {
-  const { cart, user } = useContext(AppContext);
+  const { cart, setCart, user } = useContext(AppContext);
   const [qty, setQty] = useState(() => {
     // Initialize qty state by extracting qty from each cart item
     const initialQty = {};
@@ -11,8 +11,24 @@ function Order() {
     });
     return initialQty;
   });
-    console.log(qty)
 
+  const deleteItem = (id) => {
+    setCart((prevCart) => {
+      const newCart = { ...prevCart }; // Másolat készítése a jelenlegi kosárról
+      delete newCart[id]; // Az elem törlése az adott id alapján
+      return newCart; // Visszaadjuk a frissített objektumot
+    });
+  };
+
+  const [totalPrices, setTotalPrices] = useState({});
+
+  useEffect(() => {
+    const newTotalPrices = {};
+    Object.keys(cart).forEach((id) => {
+      newTotalPrices[id] = (qty[id] || 0) * cart[id].price; // Számítás minden egyes ételhez
+    });
+    setTotalPrices(newTotalPrices);
+  }, [qty, cart]); // Figyelje a qty és cart változását
 
   return (
     <>
@@ -35,22 +51,37 @@ function Order() {
                   <tr key={key}>
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
-                    <td><input 
-                      type="text"
-                      value={item.qty}
-                      onChange={(e) => {
-                        setQty( e.target.value)
-                      }}
-                    /></td>
+                    <td>
+                      <input
+                        type="number"
+                        value={qty[item.id] || 0} // Get the qty for this dish, or default to 0
+                        onChange={(e) => {
+                          const value = Number(e.target.value);
+                          setQty((prevQty) => ({
+                            ...prevQty,
+                            [item.id]: value, // Update qty for this specific dish
+                          }));
+                        }}
+                      />
+                    </td>
                     <td>{item.price} Ft</td>
-                    <td>{item.price * item.qty} Ft</td>
-                    <td><button>Törlés</button></td>
+                    <td>{totalPrices[item.id] || 0} Ft</td>
+                    <td>
+                      <button onClick={() => deleteItem(key)}>Törlés</button>
+                    </td>
                   </tr>
-                )
-                )}
+                ))}
                 <tr>
-                  <td colSpan="4" className="text-right font-bold">Összesen:</td>
-                  <td>Ft</td>
+                  <td colSpan="4" className="text-right font-bold">
+                    Összesen:
+                  </td>
+                  <td>
+                    {Object.values(totalPrices).reduce(
+                      (acc, price) => acc + price,
+                      0
+                    )}{" "}
+                    Ft
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -60,12 +91,14 @@ function Order() {
         <article className="flex flex-col text-gray-100 w-1/2 justify-center items-center">
           {user ? (
             <>
-              <ul>Név: {user.first_name + ' ' + user.last_name}</ul>
+              <ul>Név: {user.first_name + " " + user.last_name}</ul>
               <ul>Email: {user.email}</ul>
               <ul>Telefonszám: {user.phone}</ul>
               <ul>Utca: {user.street}</ul>
               <ul>Házszám: {user.street_number}</ul>
-              <button className="mt-4 p-2 bg-blue-500 text-white rounded">Módosítás</button>
+              <button className="mt-4 p-2 bg-blue-500 text-white rounded">
+                Módosítás
+              </button>
             </>
           ) : (
             <p>Nincs felhasználói adat.</p>

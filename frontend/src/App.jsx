@@ -22,7 +22,7 @@ const {user} = useContext(AppContext)
         <Route path="/login" element={user ? <Home/> : <Login/>} />
         <Route path="/createDish" element={<CreateDish/>} />
         <Route path="/dishes" element={<Index/>} />
-        <Route path="/order" element={<Order/>} />
+        <Route path="/order" element={user ? <Order/> : <Index/> } />
         {/* <Route path="/dishes/:id" element={<CreateDishModal />} /> */}
 
         </Route>
