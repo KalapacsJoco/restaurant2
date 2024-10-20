@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
-import CreateDishModal from "../../Components/createDishModal";
+import CreateDishModal from "../../Components/CreateDishModal";
 
 function Dishes() {
   const [dishes, setDishes] = useState([]);

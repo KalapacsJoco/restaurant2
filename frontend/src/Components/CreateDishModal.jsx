@@ -2,24 +2,21 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 export default function CreateDishModal({ show, closeModal, dish }) {
-  console.log(dish?.id);
-  console.log(`/api/dishes/${dish?.id}`);
   const [formData, setFormData] = useState({
     name: dish?.name || '',
     description: dish?.description || '',
     price: dish?.price || '',
-    image: dish?.image || ''
+    image: dish?.image || '', // Kép URL szövegként
+    imageFile: null, // A feltöltött kép fájl
   });
 
   if (!show) return null;
 
-
-
   const handleChange = (e) => {
-    if (e.target.name === 'image' && e.target.files) {
+    if (e.target.name === 'imageFile' && e.target.files) {
       setFormData({
         ...formData,
-        [e.target.name]: e.target.files[0],
+        imageFile: e.target.files[0], // Képfájl kezelése
       });
     } else {
       setFormData({
@@ -32,24 +29,37 @@ export default function CreateDishModal({ show, closeModal, dish }) {
   async function submitForm(e) {
     e.preventDefault();
 
+
+
     if (!dish || !dish.id) {
       console.error("Az étel nem található");
       return;
     }
-
     const formDataObj = new FormData();
     formDataObj.append('name', formData.name);
     formDataObj.append('description', formData.description);
-    formDataObj.append('image', formData.image);
     formDataObj.append('price', formData.price);
+
+    if (formData.imageFile) {
+      formDataObj.append('image', formData.imageFile); // Fájl feltöltése
+    } else {
+      formDataObj.append('image', formData.image); // URL-ként használt kép
+    }
 
     try {
       const response = await fetch(`/api/dishes/${dish.id}`, {
         method: "PUT",
         body: formDataObj,
+        // credentials: 'include', // Ha szükséges autentikáció
       });
-      const data = await response.json();
-      console.dir(data);
+      
+      // if (response.redirected) {
+      //   // Ha átirányítás történik, ezt kezelheted itt
+      //   window.location.href = response.url;
+      // } else {
+        const data = await response.json();
+        console.dir(data);
+      // }
     } catch (e) {
       console.log(e + 'catch');
     }
@@ -103,6 +113,16 @@ export default function CreateDishModal({ show, closeModal, dish }) {
               className="w-full border rounded p-2"
             />
           </div>
+          <div className="mb-4">
+            <label htmlFor="imageFile" className="block text-sm font-medium">Kép feltöltése</label>
+            <input
+              type="file"
+              id="imageFile"
+              name="imageFile"
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
           <div className="flex justify-end">
             <button type="submit" className="bg-blue-500 text-white p-2 rounded">Mentés</button>
             <button type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">Bezárás</button>
@@ -113,21 +133,14 @@ export default function CreateDishModal({ show, closeModal, dish }) {
   );
 }
 
-// PropTypes beállítása
 CreateDishModal.propTypes = {
-  show: PropTypes.bool.isRequired,      // show mindig bool típusú kell legyen
-  closeModal: PropTypes.func.isRequired, // closeModal egy függvény kell legyen
-  dish: PropTypes.shape({               // dish egy objektum, ami tartalmazza a következőket
-    id: PropTypes.oneOfType([            // id lehet string vagy szám
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    name: PropTypes.string,              // name egy string
-    description: PropTypes.string,       // description egy string
-    price: PropTypes.oneOfType([         // price lehet string vagy szám
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    image: PropTypes.string,             // image egy string
+  show: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  dish: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+    description: PropTypes.string,
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    image: PropTypes.string,
   }),
 };

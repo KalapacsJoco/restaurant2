@@ -1,8 +1,11 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
+import ModifyUser from "../Components/modifyUserModal";
 
 function Order() {
   const { cart, setCart, user } = useContext(AppContext);
+  const [openModal, setOpenModal] = useState(false);
+
   const [qty, setQty] = useState(() => {
     // Initialize qty state by extracting qty from each cart item
     const initialQty = {};
@@ -67,7 +70,10 @@ function Order() {
                     <td>{item.price} Ft</td>
                     <td>{totalPrices[item.id] || 0} Ft</td>
                     <td>
-                      <button onClick={() => deleteItem(key)}>Törlés</button>
+                      <button 
+                      onClick={() => deleteItem(key)}
+                      className="text-red-100 bg-transparent border border-red-500 rounded-lg shadow hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
+                      >Törlés</button>
                     </td>
                   </tr>
                 ))}
@@ -89,21 +95,37 @@ function Order() {
         </article>
 
         <article className="flex flex-col text-gray-100 w-1/2 justify-center items-center">
-          {user ? (
-            <>
-              <ul>Név: {user.first_name + " " + user.last_name}</ul>
-              <ul>Email: {user.email}</ul>
-              <ul>Telefonszám: {user.phone}</ul>
-              <ul>Utca: {user.street}</ul>
-              <ul>Házszám: {user.street_number}</ul>
-              <button className="mt-4 p-2 bg-blue-500 text-white rounded">
-                Módosítás
-              </button>
-            </>
-          ) : (
-            <p>Nincs felhasználói adat.</p>
-          )}
-        </article>
+  {openModal ? (
+    // Ha openModal true, akkor megjelenítjük a ModifyUser formot
+    <ModifyUser
+      show={openModal}
+      closeModal={() => setOpenModal(false)}
+      user={user} 
+    />
+  ) : (
+    // Ha openModal false, akkor megjelenítjük a felhasználó adatait
+    <>
+      {user ? (
+        <>
+          <ul>Név: {user.first_name + " " + user.last_name}</ul>
+          <ul>Email: {user.email}</ul>
+          <ul>Telefonszám: {user.phone}</ul>
+          <ul>Utca: {user.street}</ul>
+          <ul>Házszám: {user.street_number}</ul>
+          <button 
+            onClick={() => setOpenModal(true)}
+            className="mt-4 p-2 bg-blue-500 text-white rounded"
+          >
+            Módosítás
+          </button>
+        </>
+      ) : (
+        <p>Nincs felhasználói adat.</p>
+      )}
+    </>
+  )}
+</article>
+
       </section>
     </>
   );

@@ -12,6 +12,8 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::put('/user/{user}', [AuthController::class, 'update']);
+// ->middleware('auth:sanctum');
 
 Route::get('/dishes', [DishController::class, 'index']);
 Route::post('/dishes', [DishController::class, 'store']);

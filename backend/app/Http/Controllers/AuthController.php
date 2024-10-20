@@ -68,4 +68,26 @@ class AuthController extends Controller
             'message' => 'Ki vagy jelentkezve',
         ];
     }
+
+    public function update(Request $request, User $user) {
+        // A validáció a kért mezőkre
+        $validated = $request->validate([
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id, // Figyelmen kívül hagyjuk a jelenlegi felhasználót
+            'phone' => 'required|max:255',
+            'street' => 'required|max:255',
+            'street_number' => 'required|max:255',
+        ]);
+    
+        // Frissítjük a felhasználó adatait a validált értékekkel
+        $user->update($validated);
+    
+        return response()->json([
+            'message' => 'Felhasználó adatai sikeresen módosítva',
+            'user' => $user
+        ]);
+    }
+    
+    
 }
