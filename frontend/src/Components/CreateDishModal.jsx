@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
+
 import { useState } from 'react';
 
 export default function CreateDishModal({ show, closeModal, dish }) {
+
   const [formData, setFormData] = useState({
     name: dish?.name || '',
     description: dish?.description || '',
@@ -65,6 +67,34 @@ export default function CreateDishModal({ show, closeModal, dish }) {
     }
   }
 
+  async function deleteDish() {
+    console.log(dish.id)
+    try {
+        // Küldj egy DELETE kérést a backend API-hoz
+        const response = await fetch(`/api/dishes/${dish.id}`, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "delete",
+        });
+
+        const data = await response.json();
+
+        if (data.errors) {
+          console.log(data.errors);
+        } else {
+         show = false
+
+        }
+        
+
+}
+catch (error) {
+  console.error('Error deleting dish:', error.response.data.message || error.message);
+}
+  }
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-5 rounded shadow-lg">
@@ -126,6 +156,7 @@ export default function CreateDishModal({ show, closeModal, dish }) {
           <div className="flex justify-end">
             <button type="submit" className="bg-blue-500 text-white p-2 rounded">Mentés</button>
             <button type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">Bezárás</button>
+            <button onClick={deleteDish}>Törlés</button>
           </div>
         </form>
       </div>

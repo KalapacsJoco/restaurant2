@@ -30,7 +30,7 @@ function Dishes() {
   };
 
   const addToCart = (dish) => {
-    console.log(dish.image)
+    console.log(dish.image);
     const dishQty = qty[dish.id] || 0; // Get the current quantity of the dish, default to 0 if not set
     if (dishQty > 0) {
       // Only add to cart if quantity is greater than 0
@@ -62,6 +62,7 @@ function Dishes() {
   };
 
   console.dir(dishes);
+  // console.dir(user)
 
   return (
     <div className="flex justify-center w-1/2">
@@ -75,7 +76,7 @@ function Dishes() {
             <img
               src={`http://127.0.0.1:8000/${dish.image}`}
               alt={dish.name}
-              className="w-24 h-24 object-cover" // Kép méretezése és illesztése
+              className="w-1/2 h-full object-cover" // Kép méretezése és illesztése
             />
             <div>
               <h2 className="text-lg font-bold">{dish.name}</h2>
@@ -96,17 +97,22 @@ function Dishes() {
                       }}
                     />
                   </span>
-                  {user && (
-                    <button
-                      className="text-gray-100"
-                      onClick={() => addToCart(dish)}
-                    >
-                      Kosárba
-                    </button>
-                  )}
+                  {user.user ? (
+                    user.user.is_admin ? (
+                      <button onClick={() => handleEditClick(dish)}>
+                        Módosítás
+                      </button>
+                    ) : (
+                      <button
+                        className="text-gray-100"
+                        onClick={() => addToCart(dish)}
+                      >
+                        Kosárba
+                      </button>
+                    )
+                  ) : null}
                 </div>
               )}
-              <button onClick={() => handleEditClick(dish)}>Módosítás</button>
             </div>
           </li>
         ))}

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Dish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class DishController extends Controller
 {
@@ -32,16 +34,17 @@ class DishController extends Controller
 
         if ($request->file('image')) {
             $imagePath = $request->file('image')->store('dishes', 'public');
+
         }
 
         $dish = Dish::create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'price' => $request->input('price'),
-            'image' => $imagePath, // Store the image path
+            'image' => 'storage/dishes/' . basename($imagePath),
         ]);
 
-        $dish->image = asset('storage/' . $dish->image);
+        // $dish->image = asset('storage/' . $dish->image);
 
         return [
             'message' => 'Minden fasza',
@@ -106,8 +109,23 @@ class DishController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(string $id)
     {
-        //
+        // Keresd meg a disht az ID alapján
+        $dish = Dish::findOrFail($id);
+    
+        // Ellenőrizd, hogy van-e kép és töröld a képet
+        if ($dish->image_path) { // Az image_path mező a kép elérési útját tartalmazza
+            Storage::disk('public')->delete($dish->image_path); // Törlés
+        }
+    
+        // Töröld a disht
+        $dish->delete();
+    
+        // Válasz
+        return response()->json(['message' => 'Dish deleted successfully.']);
     }
+    
+    
 }

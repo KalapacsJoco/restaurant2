@@ -19,5 +19,6 @@ Route::put('/user/{user}', [AuthController::class, 'update']);
 Route::get('/dishes', [DishController::class, 'index']);
 Route::post('/dishes', [DishController::class, 'store']);
 Route::put('/dishes/{dish}', [DishController::class, 'update']);
+Route::delete('/dishes/{dish}', [DishController::class, 'destroy']);
 
 Route::post('/order', [OrderController::class, 'store']);
