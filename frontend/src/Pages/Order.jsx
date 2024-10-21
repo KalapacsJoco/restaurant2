@@ -3,8 +3,9 @@ import { AppContext } from "../Context/AppContext";
 import ModifyUser from "../Components/modifyUserModal";
 
 function Order() {
-  const { cart, setCart, user } = useContext(AppContext);
+  const { cart, setCart, user, token } = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
+  // console.log(cart)
 
   const [qty, setQty] = useState(() => {
     // Initialize qty state by extracting qty from each cart item
@@ -32,6 +33,55 @@ function Order() {
     });
     setTotalPrices(newTotalPrices);
   }, [qty, cart]); // Figyelje a qty és cart változását
+
+  const submitOrder = async () => {
+    // Ellenőrizzük, hogy a kosár nem üres, és van-e bejelentkezett felhasználó
+    if (!user) {
+      console.error('Nincs bejelentkezve a felhasználó');
+      return;
+    }
+    if (cart.length === 0) {
+      console.error('A kosár üres');
+      return;
+    }
+
+    const requestBody = {
+      user_id: user.id,  // A bejelentkezett felhasználó ID-ja
+      status: "pending",  // Állapot megadása
+      total_price: totalPrices,  // A teljes ár
+      items: Object.keys(cart) // Az objektum kulcsainak tömbjét használjuk
+        .filter(key => key !== 'total_price') // Szűrés, hogy csak az éttermek maradjanak
+        .map(key => ({
+          dish_id: cart[key].id,
+          quantity: cart[key].qty,
+          price: cart[key].price,
+        })),  // A kosár tételeit tömbbé alakítjuk
+    };
+
+    console.log(requestBody)
+
+    // A kosár adatok és a felhasználó ID elküldése a szerver felé
+    try {
+      const response = await fetch('/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();  // A válasz adatainak feldolgozása
+      if (response.ok) {
+        console.log('Rendelés sikeresen elküldve:', data);
+        // Itt további lépéseket tehetsz, például a kosár ürítése, sikeres üzenet megjelenítése stb.
+      } else {
+        console.error('Hiba a rendelés során:', data);
+      }
+    } catch (error) {
+      console.error('Hiba a rendelés beküldése során:', error);
+    }
+  };
 
   return (
     <>
@@ -92,6 +142,7 @@ function Order() {
               </tbody>
             </table>
           </div>
+          <button onClick={submitOrder}>Megrendelem</button>
         </article>
 
         <article className="flex flex-col text-gray-100 w-1/2 justify-center items-center">

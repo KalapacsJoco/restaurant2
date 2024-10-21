@@ -44,7 +44,7 @@ class OrderController extends Controller
             }
 
             DB::commit();  // Tranzakció lezárása
-
+                // dd($order);
             return response()->json([
                 'message' => 'Rendelés sikeresen létrehozva',
                 'order' => $order,
