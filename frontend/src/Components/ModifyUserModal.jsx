@@ -122,7 +122,7 @@ function ModifyUser({ show, closeModal, user }) {
             <p className="error">{errors.street_number}</p>
           )}
         </div>
-
+          <div className="flex flex-end">
         <button
           type="submit"
           className="text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3"
@@ -137,6 +137,7 @@ function ModifyUser({ show, closeModal, user }) {
         >
           Mégse
         </button>
+        </div>
       </form>
     </>
   );
