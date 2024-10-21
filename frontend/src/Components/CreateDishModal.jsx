@@ -18,7 +18,7 @@ export default function CreateDishModal({ show, closeModal, dish }) {
     if (e.target.name === 'imageFile' && e.target.files) {
       setFormData({
         ...formData,
-        imageFile: e.target.files[0], // Képfájl kezelése
+        imageFile: e.target.files[0],
       });
     } else {
       setFormData({
@@ -49,7 +49,12 @@ export default function CreateDishModal({ show, closeModal, dish }) {
     }
 
     try {
+      console.log(dish.id)
       const response = await fetch(`/api/dishes/${dish.id}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
         method: "PUT",
         body: formDataObj,
         // credentials: 'include', // Ha szükséges autentikáció

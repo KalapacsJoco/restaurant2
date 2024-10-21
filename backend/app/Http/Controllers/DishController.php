@@ -66,43 +66,29 @@ class DishController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Dish $dish)
-    {
-        // Kérés validálása
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|numeric',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
-        // Kép frissítése, ha szükséges
-        if ($request->file('image')) {
-            $imagePath = $request->file('image')->store('dishes', 'public');
-        }
-    
-        // Frissítjük a dish adatokat
-        $dish->update([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'image' => $imagePath ?? $dish->image, // Csak akkor frissítjük, ha új kép van
-        ]);
-    
-        // return response()->json([
-        //     'message' => 'Dish updated successfully', //megvizsgalni a foto kuldeset 
-        //     'dish' => $dish
-        // ]);
+{
+    // Kérés validálása (csak az új értékekre vonatkozóan)
+    $validatedData = $request->validate([
+        'name' => 'sometimes|string',
+        'description' => 'sometimes|string',
+        'price' => 'sometimes|numeric',
+        'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        return response()->json([
-            'message' => 'Dish updated successfully',
-            'dish' => [
-                'name' => $dish->name,
-                'description' => $dish->description,
-                'image' => base64_encode(file_get_contents($dish->imagePath)),
-                'price' => $dish->price
-            ]
-        ]);
+    // Kép frissítése, ha szükséges
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('dishes', 'public');
     }
+
+    // Frissítjük a dish adatokat, az új értékekkel felülírva a régieket, ha vannak
+    $dish->update(array_merge($dish->toArray(), $validatedData));
+
+    return response()->json([
+        'message' => 'Dish updated successfully',
+        'dish' => $dish
+    ]);
+}
+    
     
     
 
