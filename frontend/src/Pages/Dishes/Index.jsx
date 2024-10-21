@@ -30,6 +30,7 @@ function Dishes() {
   };
 
   const addToCart = (dish) => {
+    console.log(dish.image)
     const dishQty = qty[dish.id] || 0; // Get the current quantity of the dish, default to 0 if not set
     if (dishQty > 0) {
       // Only add to cart if quantity is greater than 0
@@ -60,6 +61,8 @@ function Dishes() {
     }
   };
 
+  console.dir(dishes);
+
   return (
     <div className="flex justify-center w-1/2">
       <h1>Ételek</h1>
@@ -70,7 +73,7 @@ function Dishes() {
             className="flex flex-row items-center gap-4 justify-between border"
           >
             <img
-              src={`etterem//backend/storage/app/public/${dish.image}`}
+              src={`http://127.0.0.1:8000/${dish.image}`}
               alt={dish.name}
               className="w-24 h-24 object-cover" // Kép méretezése és illesztése
             />

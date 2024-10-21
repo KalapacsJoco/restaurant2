@@ -41,6 +41,8 @@ class DishController extends Controller
             'image' => $imagePath, // Store the image path
         ]);
 
+        $dish->image = asset('storage/' . $dish->image);
+
         return [
             'message' => 'Minden fasza',
             'dish' => $dish
