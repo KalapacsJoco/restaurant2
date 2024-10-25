@@ -67,11 +67,14 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
       //   window.location.href = response.url;
       // } else {
         const data = await response.json();
-        console.dir(data);
       // }
+      closeModal()
+      window.location.reload();
+
     } catch (e) {
       console.log(e + 'catch');
     }
+
   }
 
   async function deleteDish() {
@@ -91,10 +94,11 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
         if (data.errors) {
           console.log(data.errors);
         } else {
-         show = false
+         closeModal()
+         window.location.reload();
 
         }
-        
+
 
 }
 catch (error) {

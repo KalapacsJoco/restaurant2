@@ -61,11 +61,11 @@ function Dishes() {
     }
   };
 
-  console.dir(dishes);
+  // console.dir(dishes);
   // console.dir(user)
 
   return (
-    <div className="flex justify-center w-1/2 h-full max-h-[90vh] overflow-y-auto relative">
+    <div className="flex justify-center w-1/2 h-full max-h-[90vh] overflow-y-auto relative scrollbar-hide">
       <ul className="flex flex-col w-full overscroll-contain">
         {dishes.map((dish) => (
           <li
@@ -75,15 +75,15 @@ function Dishes() {
             <img
               src={`http://127.0.0.1:8000/${dish.image}`}
               alt={dish.name}
-              className="w-1/2 h-full object-cover" // Kép méretezése és illesztése
+              className="w-1/2 height-200 object-cover" // Kép méretezése és illesztése
             />
             <div className="p-4">
               <h2 className="text-lg font-bold text-gray-100">{dish.name}</h2>
               <p className="text-gray-300">{dish.description}</p>
 
               {user && (
-                <div className="flex">
-                  <h3 className="text-gray-300">{dish.price} RON</h3>
+                <div className="flex my-3">
+                  <h3 className="text-gray-300 pr-5 text-lg">{dish.price} RON</h3>
                   <span>
                     <input
                       className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
@@ -100,12 +100,15 @@ function Dishes() {
                   </span>
                   {user.user ? (
                     user.user.is_admin ? (
-                      <button onClick={() => handleEditClick(dish)}>
+                      <button
+                      className="text-green-100 bg-transparent border border-green-500 rounded-lg shadow hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4  ml-4 transition-colors duration-200"
+                      onClick={() => handleEditClick(dish)}>
+                        
                         Módosítás
                       </button>
                     ) : (
                       <button
-                        className="text-gray-100"
+                      className="text-green-100 bg-transparent border border-green-500 rounded-lg shadow hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4  ml-4 transition-colors duration-200"
                         onClick={() => addToCart(dish)}
                       >
                         Kosárba

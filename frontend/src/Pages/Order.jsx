@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
-import ModifyUser from "../Components/modifyUserModal";
+import ModifyUser from "../Components/ModifyUserModal";
 
 function Order() {
   const { cart, setCart, user, token } = useContext(AppContext);

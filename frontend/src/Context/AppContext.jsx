@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import PropTypes from 'prop-types'; 
+import PropTypes from 'prop-types';
 
 export const AppContext = createContext();
 
@@ -11,10 +11,11 @@ export default function AppProvider({ children }) {
         const savedCart = localStorage.getItem('cart');
         return savedCart ? JSON.parse(savedCart) : {};
     });
+    
 
     async function getUser() {
         if (!token) return;
-        
+
         const response = await fetch('/api/user', {
             headers: {
                 Authorization: `Bearer ${token}`, // Visszaillesztés szintaxis javítása
