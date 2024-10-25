@@ -84,20 +84,7 @@ function Dishes() {
               {user && (
                 <div className="flex my-3">
                   <h3 className="text-gray-300 pr-5 text-lg">{dish.price} RON</h3>
-                  <span>
-                    <input
-                      className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
-                      type="number"
-                      value={qty[dish.id] || 1} // Get the qty for this dish, or default to 0
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
-                        setQty((prevQty) => ({
-                          ...prevQty,
-                          [dish.id]: value, // Update qty for this specific dish
-                        }));
-                      }}
-                    />
-                  </span>
+
                   {user.user ? (
                     user.user.is_admin ? (
                       <button
@@ -107,12 +94,27 @@ function Dishes() {
                         Módosítás
                       </button>
                     ) : (
-                      <button
+                      <span>
+                      <input
+                        className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+                        type="number"
+                        value={qty[dish.id] || 1} // Get the qty for this dish, or default to 0
+                        onChange={(e) => {
+                          const value = Number(e.target.value);
+                          setQty((prevQty) => ({
+                            ...prevQty,
+                            [dish.id]: value, // Update qty for this specific dish
+                          }));
+                        }}
+                      />
+                                            <button
                       className="text-green-100 bg-transparent border border-green-500 rounded-lg shadow hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4  ml-4 transition-colors duration-200"
                         onClick={() => addToCart(dish)}
                       >
                         Kosárba
                       </button>
+                    </span>
+
                     )
                   ) : null}
                 </div>
