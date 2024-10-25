@@ -7,7 +7,7 @@ export default function Layout() {
 
   return (
     <>
-    <div className="bg-cover bg-center h-screen" style={{ backgroundImage: `url('https://img.freepik.com/premium-photo/black-stone-food-background-cooking-ingredients-top-view-free-space-your-text_187166-12991.jpg?w=740')` }}>
+    <div className="bg-cover bg-center bg-fixed h-screen" style={{ backgroundImage: `url('https://img.freepik.com/premium-photo/black-stone-food-background-cooking-ingredients-top-view-free-space-your-text_187166-12991.jpg?w=740')` }}>
 
       <Navbar/>
       <main className="flex justify-center">

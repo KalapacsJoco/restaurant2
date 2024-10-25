@@ -6,7 +6,7 @@ export default function Register() {
   const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const inputFieldStyle =
-    "w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
+    " text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -157,7 +157,7 @@ export default function Register() {
             <p className="error">{errors.street_number}</p>
           )}
         </div>
-        <button className="text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3">
+        <button className="text-blue-100 bg-transparent border border-blue-100 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-6 py-3">
           Regisztráció
         </button>
       </form>

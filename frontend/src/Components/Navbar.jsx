@@ -38,7 +38,7 @@ export function Navbar() {
 
   return (
     <>
-      <header className="border-b-2 h-16 items-center text-gray-100 ">
+      <header className="h-16 items-center text-gray-100 ">
         <nav className="flex justify-between h-3/4 ">
           <Link to="/" className={buttonStyle}>
             Home

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import { useState } from 'react';
 
-export default function CreateDishModal({ show, closeModal, dish }) {
+export default function ModifyDishModal({ show, closeModal, dish }) {
 
   const [formData, setFormData] = useState({
     name: dish?.name || '',
@@ -37,26 +37,28 @@ export default function CreateDishModal({ show, closeModal, dish }) {
       console.error("Az étel nem található");
       return;
     }
-    const formDataObj = new FormData();
-    formDataObj.append('name', formData.name);
-    formDataObj.append('description', formData.description);
-    formDataObj.append('price', formData.price);
+    // const formDataObj = new FormData();
+    // formDataObj.append('name', formData.name);
+    // formDataObj.append('description', formData.description);
+    // formDataObj.append('price', formData.price);
 
-    if (formData.imageFile) {
-      formDataObj.append('image', formData.imageFile); // Fájl feltöltése
-    } else {
-      formDataObj.append('image', formData.image); // URL-ként használt kép
-    }
+    // if (formData.imageFile) {
+    //   formDataObj.append('image', formData.imageFile); // Fájl feltöltése
+    // } else {
+    //   formDataObj.append('image', formData.image); // URL-ként használt kép
+    // }
+    // console.log(formData)
+    // //  const jsonForm = JSON.stringify(formDataObj)
 
     try {
       console.log(dish.id)
       const response = await fetch(`/api/dishes/${dish.id}`, {
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json",
+         'Content-Type': 'application/json'
         },
         method: "PUT",
-        body: formDataObj,
+        body: JSON.stringify(formData)
         // credentials: 'include', // Ha szükséges autentikáció
       });
       
@@ -169,7 +171,7 @@ catch (error) {
   );
 }
 
-CreateDishModal.propTypes = {
+ModifyDishModal.propTypes = {
   show: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   dish: PropTypes.shape({

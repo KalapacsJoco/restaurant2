@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../Context/AppContext";
 
 export default function Login() {
+  const inputFieldStyle =
+  " text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
+
     const {setToken} = useContext(AppContext)
 const navigate = useNavigate()
 
@@ -46,7 +49,7 @@ const navigate = useNavigate()
 
         <div>
           <input
-          className="w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+          className={inputFieldStyle}
             type="text"
             placeholder="Email cím"
             value={formData.email}
@@ -58,7 +61,7 @@ const navigate = useNavigate()
         </div>
         <div>
           <input
-          className="w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+          className={inputFieldStyle}
             type="password"
             placeholder="Jelszó"
             value={formData.password}
@@ -70,7 +73,7 @@ const navigate = useNavigate()
 
         </div>
 
-        <button className="text-gray-100 bg-transparent border border-gray-100 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 px-6 py-3">Bejelentkezés</button>
+        <button className="text-blue-100 bg-transparent border border-blue-100 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-6 py-3">Bejelentkezés</button>
       </form>
     </>
   );

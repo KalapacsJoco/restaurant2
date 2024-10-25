@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
-import CreateDishModal from "../../Components/CreateDishModal";
+import ModifyDishModal from "../../Components/ModifyDishModal";
 
 function Dishes() {
   const [dishes, setDishes] = useState([]);
@@ -65,29 +65,30 @@ function Dishes() {
   // console.dir(user)
 
   return (
-    <div className="flex justify-center w-1/2">
-      <h1>Ételek</h1>
-      <ul className="flex flex-col w-full">
+    <div className="flex justify-center w-1/2 h-full max-h-[90vh] overflow-y-auto relative">
+      <ul className="flex flex-col w-full overscroll-contain">
         {dishes.map((dish) => (
           <li
             key={dish.id}
-            className="flex flex-row items-center gap-4 justify-between border"
+            className="flex flex-row items-center gap-4 justify-between border my-4"
           >
             <img
               src={`http://127.0.0.1:8000/${dish.image}`}
               alt={dish.name}
               className="w-1/2 h-full object-cover" // Kép méretezése és illesztése
             />
-            <div>
-              <h2 className="text-lg font-bold">{dish.name}</h2>
-              <p>{dish.description}</p>
-              <p>{dish.price} RON</p>
+            <div className="p-4">
+              <h2 className="text-lg font-bold text-gray-100">{dish.name}</h2>
+              <p className="text-gray-300">{dish.description}</p>
+
               {user && (
-                <div>
+                <div className="flex">
+                  <h3 className="text-gray-300">{dish.price} RON</h3>
                   <span>
                     <input
+                      className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
                       type="number"
-                      value={qty[dish.id] || 0} // Get the qty for this dish, or default to 0
+                      value={qty[dish.id] || 1} // Get the qty for this dish, or default to 0
                       onChange={(e) => {
                         const value = Number(e.target.value);
                         setQty((prevQty) => ({
@@ -119,7 +120,7 @@ function Dishes() {
       </ul>
       {/* Modal megjelenítése, ha az openModal igaz */}
       {openModal && (
-        <CreateDishModal
+        <ModifyDishModal
           show={openModal}
           closeModal={() => setOpenModal(false)}
           dish={selectedDish} // Átadjuk a kiválasztott ételt a modalnak
