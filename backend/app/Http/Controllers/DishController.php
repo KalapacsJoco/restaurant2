@@ -23,7 +23,8 @@ class DishController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+    Log::info('A kért cucc:', $request->toArray());
+    $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
@@ -52,7 +53,7 @@ class DishController extends Controller
      */
     public function update(Request $request, Dish $dish)
 {
-    Log::info('Request data:', $request->all());
+    // Log::info('Request data:', $request->all());
 
     // Validate only the provided fields (not all are required)
     $validatedData = $request->validate([
@@ -68,9 +69,9 @@ class DishController extends Controller
     }
 
     // Update only the validated fields
-    Log::info('Validated data before updating:', $validatedData);
+    // Log::info('Validated data before updating:', $validatedData);
     $dish->update($validatedData);
-    Log::info('Dish after updating:', $dish->fresh()->toArray());
+    // Log::info('Dish after updating:', $dish->fresh()->toArray());
 
     return response()->json([
         'message' => 'Dish updated successfully',

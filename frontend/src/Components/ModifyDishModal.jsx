@@ -59,15 +59,10 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
         },
         method: "PUT",
         body: JSON.stringify(formData)
-        // credentials: 'include', // Ha szükséges autentikáció
       });
       
-      // if (response.redirected) {
-      //   // Ha átirányítás történik, ezt kezelheted itt
-      //   window.location.href = response.url;
-      // } else {
         const data = await response.json();
-      // }
+        console.log(data)
       closeModal()
       window.location.reload();
 
@@ -80,7 +75,6 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
   async function deleteDish() {
     console.log(dish.id)
     try {
-        // Küldj egy DELETE kérést a backend API-hoz
         const response = await fetch(`/api/dishes/${dish.id}`, {
           headers: {
             Accept: "application/json",

@@ -45,6 +45,8 @@ function Order() {
       return;
     }
 
+    console.log(totalPrices)
+
     const requestBody = {
       user_id: user.id, // A bejelentkezett felhasználó ID-ja
       status: "pending", // Állapot megadása

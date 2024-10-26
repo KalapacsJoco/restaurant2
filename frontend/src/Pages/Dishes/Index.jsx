@@ -70,12 +70,12 @@ function Dishes() {
         {dishes.map((dish) => (
           <li
             key={dish.id}
-            className="flex flex-row items-center gap-4 justify-between border my-4"
+            className="flex flex-row items-center gap-4 justify-between border rounded-lg mr-4 my-4"
           >
             <img
               src={`http://127.0.0.1:8000/${dish.image}`}
               alt={dish.name}
-              className="w-1/2 height-200 object-cover" // Kép méretezése és illesztése
+              className="w-1/2 h-full object-cover" // Kép méretezése és illesztése
             />
             <div className="p-4">
               <h2 className="text-lg font-bold text-gray-100">{dish.name}</h2>
@@ -108,7 +108,7 @@ function Dishes() {
                         }}
                       />
                                             <button
-                      className="text-green-100 bg-transparent border border-green-500 rounded-lg shadow hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4  ml-4 transition-colors duration-200"
+                      className="text-blue-100 bg-transparent border border-blue-500 rounded-lg shadow hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4  ml-4 transition-colors duration-200"
                         onClick={() => addToCart(dish)}
                       >
                         Kosárba
