@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 export default function ModifyDishModal({ show, closeModal, dish }) {
+  const inputFieldStyle =
+  " text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
+
 
   const [formData, setFormData] = useState({
     name: dish?.name || '',
@@ -101,11 +104,11 @@ catch (error) {
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-5 rounded shadow-lg">
+    <div className="fixed inset-0 flex justify-center items-center text-gray-100">
+      <div className=" rounded shadow-lg">
         <h2 className="text-lg font-bold">Étel szerkesztése</h2>
         <form onSubmit={submitForm}>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="name" className="block text-sm font-medium">Név</label>
             <input
               type="text"
@@ -113,20 +116,20 @@ catch (error) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border rounded p-2"
+              className={inputFieldStyle}
             />
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="description" className="block text-sm font-medium">Leírás</label>
             <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full border rounded p-2"
+              className={inputFieldStyle}
             />
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="price" className="block text-sm font-medium">Ár</label>
             <input
               type="number"
@@ -134,10 +137,10 @@ catch (error) {
               name="price"
               value={formData.price}
               onChange={handleChange}
-              className="w-full border rounded p-2"
+              className={inputFieldStyle}
             />
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="image" className="block text-sm font-medium">Kép URL</label>
             <input
               type="text"
@@ -145,17 +148,17 @@ catch (error) {
               name="image"
               value={formData.image}
               onChange={handleChange}
-              className="w-full border rounded p-2"
+              className={inputFieldStyle}
             />
           </div>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="imageFile" className="block text-sm font-medium">Kép feltöltése</label>
             <input
               type="file"
               id="imageFile"
               name="imageFile"
               onChange={handleChange}
-              className="w-full border rounded p-2"
+              className={inputFieldStyle}
             />
           </div>
           <div className="flex justify-end">

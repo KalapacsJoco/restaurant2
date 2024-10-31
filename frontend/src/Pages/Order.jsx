@@ -120,8 +120,8 @@ function Order() {
                         }}
                       />
                     </td>
-                    <td>{item.price} Ft</td>
-                    <td>{totalPrices[item.id] || 0} Ft</td>
+                    <td>{item.price} Ron</td>
+                    <td>{totalPrices[item.id] || 0} Ron</td>
                     <td>
                       <button
                         onClick={() => deleteItem(key)}
@@ -141,7 +141,7 @@ function Order() {
                       (acc, price) => acc + price,
                       0
                     )}{" "}
-                    Ft
+                    Ron
                   </td>
                 </tr>
               </tbody>

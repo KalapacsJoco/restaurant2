@@ -43,7 +43,7 @@ export function Navbar() {
       <header className="h-16 items-center text-gray-100 ">
         <nav className="flex justify-between h-3/4 ">
           <Link to="/" className={buttonStyle}>
-            Home
+            Főoldal
           </Link>
           {user ? (
   <div className="flex">
@@ -90,10 +90,10 @@ export function Navbar() {
 ) : (
   <div>
     <Link to="/login" className={buttonStyle}>
-      Login
+      Bejelentkezés
     </Link>
     <Link to="/register" className={buttonStyle}>
-      Register
+      Regisztrálás
     </Link>
   </div>
 )}

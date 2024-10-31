@@ -12,23 +12,21 @@ export default function AppProvider({ children }) {
         return savedCart ? JSON.parse(savedCart) : {};
     });
     
-
     async function getUser() {
         if (!token) return;
 
         const response = await fetch('/api/user', {
             headers: {
-                Authorization: `Bearer ${token}`, // Visszaillesztés szintaxis javítása
+                Authorization: `Bearer ${token}`, 
             },
         });
-        // console.log(`Bearer ${token}`)
 
 
         if (response.ok) {
             const data = await response.json();
             setUser(data);
         } else {
-            console.error('Failed to fetch user data');
+            console.error('Felhasználó betöltése sikertelen');
         }
     }
 

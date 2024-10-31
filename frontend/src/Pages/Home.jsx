@@ -4,7 +4,11 @@ export default function Home() {
 
     return (
         <>
-            <h1 className="title">Otthon</h1>
+            <section>
+                <h1 className="title text-gray-100">Főoldal</h1> 
+            <div className="text-red-300">Fejlesztés alatt</div>
+            </section>
+            
     
 
         </>

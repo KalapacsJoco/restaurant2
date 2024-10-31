@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function CreateDish() {
+  const navigate = useNavigate();
+
   const inputFieldStyle =
     "my-4 text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
 
@@ -43,6 +47,9 @@ export default function CreateDish() {
     });
     const data = await response.json();
     console.log(data);
+    navigate("/dishes");
+
+
   }
   return (
     <form onSubmit={submitForm} className="flex flex-col w-1/3 items-center">
