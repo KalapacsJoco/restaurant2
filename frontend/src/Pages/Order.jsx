@@ -40,29 +40,24 @@ function Order() {
       console.error("Nincs bejelentkezve a felhasználó");
       return;
     }
-    if (cart.length === 0) {
+    if (Object.keys(cart).length === 0) {
       console.error("A kosár üres");
       return;
     }
-
-    console.log(totalPrices)
-
+  
     const requestBody = {
       user_id: user.id, // A bejelentkezett felhasználó ID-ja
       status: "pending", // Állapot megadása
-      total_price: totalPrices, // A teljes ár
-      items: Object.keys(cart) // Az objektum kulcsainak tömbjét használjuk
-        .filter((key) => key !== "total_price") // Szűrés, hogy csak az éttermek maradjanak
-        .map((key) => ({
-          dish_id: cart[key].id,
-          quantity: cart[key].qty,
-          price: cart[key].price,
-        })), // A kosár tételeit tömbbé alakítjuk
+      total_price: Object.values(totalPrices).reduce((acc, price) => acc + price, 0), // A teljes ár összegzése
+      items: Object.keys(cart).map((key) => ({
+        dish_id: cart[key].id, // Az étel ID-ja
+        quantity: qty[key], // A rendelt mennyiség
+        price: cart[key].price, // Egységár
+      })), // A kosár tételeit tömbbé alakítjuk
     };
-
+  
     console.log(requestBody);
-
-    // A kosár adatok és a felhasználó ID elküldése a szerver felé
+  
     try {
       const response = await fetch("/api/order", {
         method: "POST",
@@ -72,11 +67,12 @@ function Order() {
         },
         body: JSON.stringify(requestBody),
       });
-
+  
       const data = await response.json(); // A válasz adatainak feldolgozása
       if (response.ok) {
         console.log("Rendelés sikeresen elküldve:", data);
-        // Itt további lépéseket tehetsz, például a kosár ürítése, sikeres üzenet megjelenítése stb.
+        // Kosár ürítése sikeres rendelés után
+        setCart({});
       } else {
         console.error("Hiba a rendelés során:", data);
       }
@@ -84,7 +80,7 @@ function Order() {
       console.error("Hiba a rendelés beküldése során:", error);
     }
   };
-
+  
   return (
     <>
       <section className="flex text-gray-100 w-full h-1/2">
