@@ -7,16 +7,24 @@ function Dishes() {
   const [dishes, setDishes] = useState([]);
   const user = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedDish, setSelectedDish] = useState(null); 
+  const [selectedDish, setSelectedDish] = useState(null);
   const { setCart } = useContext(AppContext);
-  const [qty, setQty] = useState({}); 
+  const [qty, setQty] = useState({}); // Mennyiségek állapota
 
+  // Ételek betöltése
   useEffect(() => {
     const fetchDishes = async () => {
       try {
         const response = await fetch("/api/dishes");
-        const data = await response.json(); 
-        setDishes(data); 
+        const data = await response.json();
+        setDishes(data);
+
+        // Kezdeti mennyiségek beállítása minden ételhez
+        const initialQty = {};
+        data.forEach((dish) => {
+          initialQty[dish.id] = 1; // Alapértelmezett érték: 1
+        });
+        setQty(initialQty);
       } catch (error) {
         console.error("Error fetching dishes:", error);
       }
@@ -25,15 +33,13 @@ function Dishes() {
   }, []);
 
   const handleEditClick = (dish) => {
-    setSelectedDish(dish); 
-    setOpenModal(true); 
+    setSelectedDish(dish);
+    setOpenModal(true);
   };
 
   const addToCart = (dish) => {
-    console.log(dish.image);
-    const dishQty = qty[dish.id] || 0; 
+    const dishQty = qty[dish.id] || 1; // Alapértelmezett érték biztosítása
     if (dishQty > 0) {
-    
       setCart((prevCart) => {
         if (prevCart[dish.id]) {
           return {
@@ -96,7 +102,7 @@ function Dishes() {
                             <input
                               className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
                               type="number"
-                              value={qty[dish.id] || 1}
+                              value={qty[dish.id]} // Érték mindig a `qty` állapotból
                               onChange={(e) => {
                                 const value = Number(e.target.value);
                                 setQty((prevQty) => ({
