@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 function ModifyUser({ show, closeModal, user }) {
-//   console.log(user);
+  //   console.log(user);
   const [errors, setErrors] = useState({});
   const inputFieldStyle =
     "w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
@@ -26,7 +26,7 @@ function ModifyUser({ show, closeModal, user }) {
 
   async function modifyUser(e) {
     e.preventDefault();
-    console.log(`/api/user/${user.id}`)
+    console.log(`/api/user/${user.id}`);
     const response = await fetch(`/api/user/${user.id}`, {
       headers: {
         Accept: "application/json",
@@ -45,6 +45,9 @@ function ModifyUser({ show, closeModal, user }) {
     }
 
     console.dir(data);
+    
+    closeModal();
+    window.location.reload();
   }
 
   return (
@@ -122,21 +125,21 @@ function ModifyUser({ show, closeModal, user }) {
             <p className="error">{errors.street_number}</p>
           )}
         </div>
-          <div className="flex flex-end">
-        <button
-          type="submit"
-          className="text-blue-100 bg-transparent border border-blue-500 rounded-lg shadow hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
-        //   onClick={closeModal}
-        >
-          Módosítás
-        </button>
-        <button
-          type="button"
-          className="text-red-100 bg-transparent border border-red-500 rounded-lg shadow hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
-          onClick={closeModal}
-        >
-          Mégse
-        </button>
+        <div className="flex flex-end">
+          <button
+            type="submit"
+            className="text-blue-100 bg-transparent border border-blue-500 rounded-lg shadow hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
+          >
+            Módosítás
+          </button>
+
+          <button
+            type="button"
+            className="text-red-100 bg-transparent border border-red-500 rounded-lg shadow hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
+            onClick={closeModal}
+          >
+            Mégse
+          </button>
         </div>
       </form>
     </>
@@ -149,13 +152,12 @@ ModifyUser.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // string vagy number lehet
     first_name: PropTypes.string, // kötelező string típus
-    last_name: PropTypes.string,  // kötelező string típus
-    email: PropTypes.string,      // helyes típusa string, nincs email prop type
+    last_name: PropTypes.string, // kötelező string típus
+    email: PropTypes.string, // helyes típusa string, nincs email prop type
     phone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // string vagy number lehet
     street: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // string vagy number lehet
     street_number: PropTypes.string, // string típus
   }).isRequired, // user prop kötelező
 };
-
 
 export default ModifyUser;
