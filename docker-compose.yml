@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend/storage:/var/www/backend/storage
+      - ./frontend/dist:/var/www/frontend/dist
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 1
+      APP_KEY: base64:OCt/RPX8WyMOl5TtKG6XCfh2biyjrvEANJMye8rOgzE=

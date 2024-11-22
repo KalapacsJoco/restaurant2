@@ -1,26 +1,26 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
 import ModifyUser from "../Components/ModifyUserModal";
+import SuccessModal from "../Components/SuccessModal";
 
 function Order() {
   const { cart, setCart, user, token } = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
-  // console.log(cart)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // SuccessModal állapota
 
   const [qty, setQty] = useState(() => {
-    // Initialize qty state by extracting qty from each cart item
     const initialQty = {};
     Object.keys(cart).forEach((id) => {
-      initialQty[id] = cart[id].qty; // Extract the qty from each item
+      initialQty[id] = cart[id].qty;
     });
     return initialQty;
   });
 
   const deleteItem = (id) => {
     setCart((prevCart) => {
-      const newCart = { ...prevCart }; // Másolat készítése a jelenlegi kosárról
-      delete newCart[id]; // Az elem törlése az adott id alapján
-      return newCart; // Visszaadjuk a frissített objektumot
+      const newCart = { ...prevCart };
+      delete newCart[id];
+      return newCart;
     });
   };
 
@@ -29,13 +29,12 @@ function Order() {
   useEffect(() => {
     const newTotalPrices = {};
     Object.keys(cart).forEach((id) => {
-      newTotalPrices[id] = (qty[id] || 0) * cart[id].price; // Számítás minden egyes ételhez
+      newTotalPrices[id] = (qty[id] || 0) * cart[id].price;
     });
     setTotalPrices(newTotalPrices);
-  }, [qty, cart]); // Figyelje a qty és cart változását
+  }, [qty, cart]);
 
   const submitOrder = async () => {
-    // Ellenőrizzük, hogy a kosár nem üres, és van-e bejelentkezett felhasználó
     if (!user) {
       console.error("Nincs bejelentkezve a felhasználó");
       return;
@@ -44,20 +43,18 @@ function Order() {
       console.error("A kosár üres");
       return;
     }
-  
+
     const requestBody = {
-      user_id: user.id, // A bejelentkezett felhasználó ID-ja
-      status: "pending", // Állapot megadása
-      total_price: Object.values(totalPrices).reduce((acc, price) => acc + price, 0), // A teljes ár összegzése
+      user_id: user.id,
+      status: "pending",
+      total_price: Object.values(totalPrices).reduce((acc, price) => acc + price, 0),
       items: Object.keys(cart).map((key) => ({
-        dish_id: cart[key].id, // Az étel ID-ja
-        quantity: qty[key], // A rendelt mennyiség
-        price: cart[key].price, // Egységár
-      })), // A kosár tételeit tömbbé alakítjuk
+        dish_id: cart[key].id,
+        quantity: qty[key],
+        price: cart[key].price,
+      })),
     };
-  
-    console.log(requestBody);
-  
+
     try {
       const response = await fetch("/api/order", {
         method: "POST",
@@ -67,12 +64,12 @@ function Order() {
         },
         body: JSON.stringify(requestBody),
       });
-  
-      const data = await response.json(); // A válasz adatainak feldolgozása
+
+      const data = await response.json();
       if (response.ok) {
         console.log("Rendelés sikeresen elküldve:", data);
-        // Kosár ürítése sikeres rendelés után
         setCart({});
+        setIsSuccessModalOpen(true); // SuccessModal megnyitása
       } else {
         console.error("Hiba a rendelés során:", data);
       }
@@ -80,7 +77,7 @@ function Order() {
       console.error("Hiba a rendelés beküldése során:", error);
     }
   };
-  
+
   return (
     <>
       <section className="flex text-gray-100 w-full h-1/2">
@@ -106,12 +103,12 @@ function Order() {
                       <input
                         className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
                         type="number"
-                        value={qty[item.id] || 0} // Get the qty for this dish, or default to 0
+                        value={qty[item.id] || 0}
                         onChange={(e) => {
                           const value = Number(e.target.value);
                           setQty((prevQty) => ({
                             ...prevQty,
-                            [item.id]: value, // Update qty for this specific dish
+                            [item.id]: value,
                           }));
                         }}
                       />
@@ -132,11 +129,8 @@ function Order() {
                   <td colSpan="4" className="text-right font-bold">
                     Összesen:
                   </td>
-                  <td className="text-lg" >
-                    {Object.values(totalPrices).reduce(
-                      (acc, price) => acc + price,
-                      0
-                    )}{" "}
+                  <td className="text-lg">
+                    {Object.values(totalPrices).reduce((acc, price) => acc + price, 0)}{" "}
                     Ron
                   </td>
                 </tr>
@@ -153,14 +147,12 @@ function Order() {
 
         <article className="flex flex-col text-gray-100 w-1/2 justify-center items-center">
           {openModal ? (
-            // Ha openModal true, akkor megjelenítjük a ModifyUser formot
             <ModifyUser
               show={openModal}
               closeModal={() => setOpenModal(false)}
               user={user}
             />
           ) : (
-            // Ha openModal false, akkor megjelenítjük a felhasználó adatait
             <>
               {user ? (
                 <>
@@ -183,6 +175,12 @@ function Order() {
           )}
         </article>
       </section>
+
+      {/* Success Modal */}
+      <SuccessModal
+        show={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+      />
     </>
   );
 }

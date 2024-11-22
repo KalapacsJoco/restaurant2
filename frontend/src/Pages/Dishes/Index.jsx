@@ -65,34 +65,34 @@ function Dishes() {
   };
 
   return (
-    <div className="flex justify-center">
-      {!openModal && (
-        <div className="flex justify-center w-1/2 h-full max-h-[90vh] overflow-y-auto relative scrollbar-hide">
-          <ul className="flex flex-col w-full overscroll-contain">
-            {dishes.map((dish) => (
-              <li
-                key={dish.id}
-                className="flex flex-row items-center gap-4 justify-between border rounded-lg mr-4 my-4"
-              >
+    <div className="flex justify-center ">
+    {!openModal && (
+      <div className="flex justify-center w-3/4 h-full max-h-[90vh] overflow-y-auto relative scrollbar-hide"> 
+        <ul className="flex flex-col w-full overscroll-contain">
+          {dishes.map((dish) => (
+            <li
+              key={dish.id}
+              className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
+            >
                 <img
                   src={`http://127.0.0.1:8000/${dish.image}`}
                   alt={dish.name}
-                  className="w-1/2 h-full object-cover"
+                  className="w-1/2 h-full object-cover rounded-l-lg" 
                 />
                 <div className="p-4">
-                  <h2 className="text-lg font-bold text-gray-100">{dish.name}</h2>
-                  <p className="text-gray-300">{dish.description}</p>
+                  <h2 className="text-lg font-bold text-yellow-500">{dish.name}</h2> 
+                  <p className="text-gray-400">{dish.description}</p>
 
                   {user && (
                     <div className="flex my-3">
-                      <h3 className="text-gray-300 pr-5 text-lg">
+                      <h3 className="text-gray-400 pr-5 text-lg">
                         {dish.price} RON
                       </h3>
 
                       {user.user ? (
                         user.user.is_admin ? (
                           <button
-                            className="text-green-100 bg-transparent border border-green-500 rounded-lg shadow hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4 ml-4 transition-colors duration-200"
+                            className="text-green-100 bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 transition-colors duration-200" 
                             onClick={() => handleEditClick(dish)}
                           >
                             Módosítás
@@ -102,7 +102,7 @@ function Dishes() {
                             <input
                               className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
                               type="number"
-                              value={qty[dish.id]} // Érték mindig a `qty` állapotból
+                              value={qty[dish.id]}
                               onChange={(e) => {
                                 const value = Number(e.target.value);
                                 setQty((prevQty) => ({
@@ -112,7 +112,7 @@ function Dishes() {
                               }}
                             />
                             <button
-                              className="text-blue-100 bg-transparent border border-blue-500 rounded-lg shadow hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4 ml-4 transition-colors duration-200"
+                              className="text-blue-100 bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 ml-4 transition-colors duration-200" 
                               onClick={() => addToCart(dish)}
                             >
                               Kosárba
@@ -129,7 +129,8 @@ function Dishes() {
         </div>
       )}
 
-      {openModal && (
+     
+{openModal && (
         <>
           <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
           <div className="fixed inset-0 z-50 flex justify-center items-center">
