@@ -65,19 +65,19 @@ function Dishes() {
   };
 
   return (
-    <div className="flex justify-center ">
-    {!openModal && (
-      <div className="flex justify-center w-3/4 h-full max-h-[90vh] overflow-y-auto relative scrollbar-hide"> 
-        <ul className="flex flex-col w-full overscroll-contain">
+<div className="flex justify-center  overflow-y-auto h-screen"> 
+  {!openModal && (
+    <div className="flex justify-center w-3/5  max-h-[90vh] relative"> 
+      <ul className="flex flex-col w-full overscroll-contain">
           {dishes.map((dish) => (
             <li
               key={dish.id}
-              className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
+              className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 p-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
             >
                 <img
                   src={`http://127.0.0.1:8000/${dish.image}`}
                   alt={dish.name}
-                  className="w-1/2 h-full object-cover rounded-l-lg" 
+                  className="w-1/2 h-full object-cover rounded-lg" 
                 />
                 <div className="p-4">
                   <h2 className="text-lg font-bold text-yellow-500">{dish.name}</h2> 

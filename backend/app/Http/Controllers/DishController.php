@@ -51,33 +51,49 @@ class DishController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Dish $dish)
-{
-    // Log::info('Request data:', $request->all());
-
-    // Validate only the provided fields (not all are required)
-    $validatedData = $request->validate([
-        'name' => 'sometimes|string|max:255',
-        'description' => 'sometimes|string',
-        'price' => 'sometimes|numeric|min:0',
-        // 'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    // Handle image upload if a new image is provided
-    if ($request->hasFile('image')) {
-        // ... (rest of image handling code)
+    public function update(Request $request, $id)
+    {
+        // Ellenőrizd, hogy az adatbázisban létezik-e a megadott étel
+        $dish = Dish::findOrFail($id);
+    
+        // Adatok validálása
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // A kép nem kötelező
+        ]);
+    
+        // Mezők frissítése
+        $dish->name = $validatedData['name'];
+        $dish->description = $validatedData['description'];
+        $dish->price = $validatedData['price'];
+    
+        // Ha van új kép
+        if ($request->hasFile('image')) {
+            // Ha van meglévő kép, töröljük azt
+            if ($dish->image) {
+                $oldImagePath = public_path($dish->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath); // Régi kép törlése
+                }
+            }
+    
+            // Új kép feltöltése
+            $imagePath = $request->file('image')->store('dishes', 'public');
+            $dish->image = 'storage/' . $imagePath; // Az új kép elérési útjának mentése
+        }
+    
+        // Adatok mentése az adatbázisba
+        $dish->save();
+    
+        // JSON válasz visszaadása
+        return response()->json([
+            'message' => 'Dish updated successfully',
+            'dish' => $dish,
+        ], 200);
     }
-
-    // Update only the validated fields
-    // Log::info('Validated data before updating:', $validatedData);
-    $dish->update($validatedData);
-    // Log::info('Dish after updating:', $dish->fresh()->toArray());
-
-    return response()->json([
-        'message' => 'Dish updated successfully',
-        'dish' => $dish
-    ]);
-}
+            
 
     /**
      * Remove the specified resource from storage.

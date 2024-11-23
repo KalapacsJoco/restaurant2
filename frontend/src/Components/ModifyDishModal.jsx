@@ -34,46 +34,36 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
   async function submitForm(e) {
     e.preventDefault();
 
-
-
     if (!dish || !dish.id) {
-      console.error("Az étel nem található");
-      return;
+        console.error("Az étel nem található");
+        return;
     }
-    // const formDataObj = new FormData();
-    // formDataObj.append('name', formData.name);
-    // formDataObj.append('description', formData.description);
-    // formDataObj.append('price', formData.price);
 
-    // if (formData.imageFile) {
-    //   formDataObj.append('image', formData.imageFile); // Fájl feltöltése
-    // } else {
-    //   formDataObj.append('image', formData.image); // URL-ként használt kép
-    // }
-    // console.log(formData)
-    // //  const jsonForm = JSON.stringify(formDataObj)
+    const formDataObj = new FormData();
+    formDataObj.append('name', formData.name);
+    formDataObj.append('description', formData.description);
+    formDataObj.append('price', formData.price);
+
+    if (formData.imageFile) {
+        formDataObj.append('image', formData.imageFile); // Új kép fájl
+    } else {
+        formDataObj.append('image', formData.image); // Ha nincs új kép, használd a meglévőt
+    }
 
     try {
-      console.log(dish.id)
-      const response = await fetch(`/api/dishes/${dish.id}`, {
-        headers: {
-          Accept: "application/json",
-         'Content-Type': 'application/json'
-        },
-        method: "PUT",
-        body: JSON.stringify(formData)
-      });
-      
+        const response = await fetch(`/api/dishes/${dish.id}`, {
+            method: "POST", // Laravel PUT requestekhez is elfogadhat POST-ot
+            body: formDataObj,
+        });
+
         const data = await response.json();
-        console.log(data)
-      closeModal()
-      window.location.reload();
-
+        console.log(data);
+        closeModal();
+        window.location.reload();
     } catch (e) {
-      console.log(e + 'catch');
+        console.error('Hiba a módosítás során:', e);
     }
-
-  }
+}
 
   async function deleteDish() {
     console.log(dish.id)
@@ -106,7 +96,10 @@ catch (error) {
   return (
     <div className="fixed inset-0 flex justify-center items-center text-gray-100 ">
       <div className=" rounded shadow-lg w-1/3">
+      <div className="flex justify-between">
         <h2 className="text-lg font-bold">Étel szerkesztése</h2>
+        <div type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">x</div>
+        </div>
         <form onSubmit={submitForm} className="">
           <div className="">
             <label htmlFor="name" className="block text-sm font-medium">Név</label>
@@ -145,7 +138,7 @@ catch (error) {
             <img
                   src={`http://127.0.0.1:8000/${dish.image}`}
                   alt={dish.name}
-                  className="w-1/2 h-full object-cover rounded-l-lg" 
+                  className="w-1/2 h-full object-cover rounded-lg" 
                 />
           </div>
           <div className="">
@@ -159,9 +152,8 @@ catch (error) {
             />
           </div>
           <div className="flex justify-end">
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded">Mentés</button>
-            <button type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">Bezárás</button>
-            <button onClick={deleteDish}>Törlés</button>
+            <button type="submit"  className="bg-blue-500 text-white p-2 rounded">Mentés</button>
+            <button onClick={deleteDish} className="bg-red-500 text-white p-2 rounded">Törlés</button>
           </div>
         </form>
       </div>
