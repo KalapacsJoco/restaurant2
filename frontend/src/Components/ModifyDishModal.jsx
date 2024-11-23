@@ -104,10 +104,10 @@ catch (error) {
   }
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center text-gray-100">
-      <div className=" rounded shadow-lg">
+    <div className="fixed inset-0 flex justify-center items-center text-gray-100 ">
+      <div className=" rounded shadow-lg w-1/3">
         <h2 className="text-lg font-bold">Étel szerkesztése</h2>
-        <form onSubmit={submitForm}>
+        <form onSubmit={submitForm} className="">
           <div className="">
             <label htmlFor="name" className="block text-sm font-medium">Név</label>
             <input
@@ -141,15 +141,12 @@ catch (error) {
             />
           </div>
           <div className="">
-            <label htmlFor="image" className="block text-sm font-medium">Kép URL</label>
-            <input
-              type="text"
-              id="image"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              className={inputFieldStyle}
-            />
+            <label htmlFor="image" className="block text-sm font-medium">Jelenlegi kép:</label>
+            <img
+                  src={`http://127.0.0.1:8000/${dish.image}`}
+                  alt={dish.name}
+                  className="w-1/2 h-full object-cover rounded-l-lg" 
+                />
           </div>
           <div className="">
             <label htmlFor="imageFile" className="block text-sm font-medium">Kép feltöltése</label>
