@@ -70,6 +70,7 @@ function Dishes() {
     <div className="flex justify-center w-3/5  max-h-[90vh] relative"> 
       <ul className="flex flex-col w-full overscroll-contain">
           {dishes.map((dish) => (
+            
             <li
               key={dish.id}
               className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 p-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"

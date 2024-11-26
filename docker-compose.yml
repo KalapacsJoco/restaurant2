@@ -1,15 +1,28 @@
-version: '3.8'
+# version: '3.9'
+
 services:
-  app:
+  backend:
     build:
-      context: .
-      dockerfile: Dockerfile
+       context: ./backend
+       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8000:8000"
     volumes:
-      - ./backend/storage:/var/www/backend/storage
-      - ./frontend/dist:/var/www/frontend/dist
+      - ./backend:/var/www/backend
     environment:
       APP_ENV: local
-      APP_DEBUG: 1
-      APP_KEY: base64:OCt/RPX8WyMOl5TtKG6XCfh2biyjrvEANJMye8rOgzE=
+      APP_DEBUG: 'true'
+      APP_KEY: base64:XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/backend/database/database.sqlite
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/usr/src/app
+    stdin_open: true
+    tty: true
