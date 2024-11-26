@@ -1,7 +1,7 @@
 # Online Étterem Rendelői Felület
 
-Ez az alkalmazás lehetővé teszi, hogy az ügyfelek online rendeljenek ételt.  
-Használja a Laravel és React keretrendszereket, modern dizájnnal és könnyen kezelhető felülettel.
+Ez az alkalmazás lehetővé teszi, hogy az ügyfelek online rendelhessenek ételt. 
+A weblapon teljes CRUD műveletek végezhetők mind az ételeken (admin felület), mind a felhasználókon.
 
 ## Használt technológiák
 - **Laravel**: Backend keretrendszer.
@@ -16,7 +16,7 @@ Használja a Laravel és React keretrendszereket, modern dizájnnal és könnyen
 
 ## Telepítési útmutató (Docker)
 1. A projekt a Docker Hub-ról könnyen letölthető a következő parancsokkal:
-   ```bash
+   
    docker pull kalapom/etterem-frontend:latest
    docker pull kalapom/etterem-backend:latest
 
