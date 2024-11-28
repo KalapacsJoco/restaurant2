@@ -17,13 +17,13 @@ Ez az alkalmazás egy Laravel és React alapú webes platform, amely lehetővé 
 ## Telepítési útmutató (Docker)
 A projekt a Docker Hub-ról könnyen letölthető a következő parancsokkal:
    
-   docker pull kalapom/etterem-frontend:latest
-   docker pull kalapom/etterem-backend:latest
+- docker pull kalapom/etterem-frontend:latest
+- docker pull kalapom/etterem-backend:latest
 
 Az alábbi parancsokkal indíthatja el a frontendet és a backendet helyi környezetben a Docker segítségével:
 
-   docker run -d -p 5173:5173 kalapom/etterem-frontend:latest
-   docker run -d -p 8000:8000 kalapom/etterem-backend:latest
+- docker run -d -p 5173:5173 kalapom/etterem-frontend:latest
+- docker run -d -p 8000:8000 kalapom/etterem-backend:latest
 
 
 ## Megjegyzések
@@ -42,7 +42,7 @@ Természetesen új felhasználó regisztrálására is van lehetőség.
 
 ## Gyakori problémák
 
-Jelenleg problémát tapasztaltam a projekt Docker Hub-ról való letöltése és futtatása során, ennek megoldásán dolgozom
+Jelenleg problémát tapasztaltam a projekt Docker Hub-ról való letöltése és futtatása során, ennek megoldásán dolgozom, a lokálisan létrehozott docker container-ek viszont működnek.
 
 ## További tervek
 
