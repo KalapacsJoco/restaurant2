@@ -21,6 +21,9 @@ RUN composer install --optimize-autoloader --no-dev
 # Laravel cache-ek létrehozása
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
+# Szimbolikus link létrehozása a storage mappához
+RUN php artisan storage:link
+
 # Laravel alkalmazás futtatásához
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 

@@ -1,20 +1,21 @@
-# version: '3.9'
+version: '3.9'
 
 services:
   backend:
     build:
-       context: ./backend
-       dockerfile: Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/var/www/backend
+
     environment:
       APP_ENV: local
       APP_DEBUG: 'true'
-      APP_KEY: base64:XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      APP_KEY: base64:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       DB_CONNECTION: sqlite
       DB_DATABASE: /var/www/backend/database/database.sqlite
+    networks:
+      - etterem-network
 
   frontend:
     build:
@@ -22,7 +23,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend:/usr/src/app
     stdin_open: true
     tty: true
+    networks:
+      - etterem-network
+
+networks:
+  etterem-network:

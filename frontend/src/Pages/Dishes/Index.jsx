@@ -65,9 +65,9 @@ function Dishes() {
   };
 
   return (
-<div className="flex justify-center  overflow-y-auto h-screen"> 
+<div className="flex justify-center overflow-y-auto"> 
   {!openModal && (
-    <div className="flex justify-center w-3/5  max-h-[90vh] relative"> 
+    <div className="flex justify-center w-3/5  max-h-[90vh] relative  h-screen"> 
       <ul className="flex flex-col w-full overscroll-contain">
           {dishes.map((dish) => (
             
