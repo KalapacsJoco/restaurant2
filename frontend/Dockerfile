@@ -1,27 +1,24 @@
+# Node.js alapú image
 FROM node:20-alpine
 
 # Alkalmazás munkakönyvtár beállítása
 WORKDIR /usr/src/app
 
-# package.json és package-lock.json másolása
+# package.json és package-lock.json másolása a cache használatához
 COPY package*.json ./
 
-# Függőségek telepítése
-RUN npm install
-
-
-# Cache törlése (opcionális, ha szükséges)
-RUN npm cache clean --force
-
+# Függőségek telepítése (csak a production környezethez)
+RUN npm install --only=production
 
 # Alkalmazás fájlok másolása
 COPY . .
 
-# Rollup manuális telepítése
-RUN npm install rollup@latest --save-dev
-
-# Port kiexportálása
+# Port dokumentálása
 EXPOSE 5173
+
+# Környezeti változók átadása (például Vite backend URL)
+ARG VITE_BACKEND_URL=http://backend:8000
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 
 # Alkalmazás futtatása
 CMD ["npm", "run", "dev"]

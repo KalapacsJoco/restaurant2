@@ -1,13 +1,13 @@
 # Online Étterem Rendelői Felület
 
-Ez az alkalmazás egy Laravel és React alapú webes platform, amely lehetővé teszi az ügyfelek számára, hogy online ételrendeléseket végezzenek. A rendszer magában foglal egy adminisztrációs felületet is, amely lehetővé teszi az ételek kezelését és felhasználók nyilvántartását. A projekt Docker-alapú konténerizációval van ellátva.
+Ez az alkalmazás egy Laravel és React alapú webes platform, amely lehetővé teszi az ügyfelek számára, hogy online ételrendeléseket végezzenek. Tartalmaz egy adminisztrációs felületet az ételek és felhasználók kezelésére, valamint modern felhasználói élményt nyújt Tailwind CSS segítségével.
 
 ## Használt technológiák
 - **Laravel**: Backend keretrendszer.
 - **React**: Frontend felület.
 - **Docker**: Konténerizált környezet futtatása.
-- **SQLite**: Adatbázis a könnyű helyi tároláshoz.
-- **Tailwind CSS**: A kellemes felhasználói élményhez.
+- **SQLite**: Könnyen hordozható adatbázis.
+- **Tailwind CSS**: Letisztult és reszponzív stílusok.
 
 ## Főbb funkciók
 - Online ételrendelési lehetőség.
@@ -16,44 +16,39 @@ Ez az alkalmazás egy Laravel és React alapú webes platform, amely lehetővé 
 
 ## Telepítési útmutató (Docker)
 A projekt a Docker Hub-ról könnyen letölthető a következő parancsokkal:
-   
+
 - docker pull kalapom/etterem-frontend:latest
 - docker pull kalapom/etterem-backend:latest
 
 Az alábbi parancsokkal indíthatja el a frontendet és a backendet helyi környezetben a Docker segítségével:
 
-- docker run -d -p 5173:5173 kalapom/etterem-frontend:latest
-- docker run -d -p 8000:8000 kalapom/etterem-backend:latest
+- docker network create etterem-network
+- docker run -d --name backend --network etterem-network -p 8000:8000 kalapom/etterem-backend:latest
+- docker run -d --name frontend --network etterem-network -p 5173:5173 kalapom/etterem-frontend:latest
 
+**Megjegyzés:** A Play with Docker platform dinamikusan generált URL-eket és portokat használ, amelyek nem támogatják a projekt konfigurációit. Ezért ezen a platformon nem működik megfelelően. Ugyanakkor bármely Docker-támogatott környezetben (például Docker Desktop) a rendszer probléma nélkül fut.
 
-## Megjegyzések
+## Tesztelési felhasználók
 
-A weblap adminisztrátori funckióihoz használja a következő felhasználót:
+Az alábbi adminisztrátori és felhasználói adatok kizárólag a rendszer kipróbálására szolgálnak:
 
-    email: sasa@gmail.com
-    jelszó: 123
+- Adminisztrátor:
+  - **Email:** sasa@gmail.com
+  - **Jelszó:** 123
 
-Tesztelés céljából több fogyasztói felhasználó is elérhető, közülük az egyik:
+- Felhasználó:
+  - **Email:** sanyi@gmail.com
+  - **Jelszó:** 123
 
-    email:sanyi@gmail.com
-    jelszó: 123,
-
-Természetesen új felhasználó regisztrálására is van lehetőség.
-
-## Gyakori problémák
-
-Jelenleg problémát tapasztaltam a projekt Docker Hub-ról való letöltése és futtatása során, ennek megoldásán dolgozom, a lokálisan létrehozott docker container-ek viszont működnek.
+Új felhasználók regisztrálására is lehetőség van.
 
 ## További tervek
+- **Reszponzív design:** Mobilbarát elrendezés kialakítása a Tailwind CSS segítségével.
+- **Értesítések:** Automatikus email-értesítések integrálása a rendelési állapotokról (pl. rendelés visszaigazolása).
 
-A fent említett probléma kiküszöbölése és az oldal reszponzívvá tétele
-A rendelési folyamat automatizált értesítésekkel való bővítése (pl. email értesítések).
-
-## Képek
+## Demo képek
 
 ![Főoldal](./screenshots/dishes.PNG)
 ![Adminisztrációs felület](./screenshots/admin.PNG)
 ![Rendelési felület](./screenshots/order.PNG)
 
-
-## Köszönöm a figyelmet!
