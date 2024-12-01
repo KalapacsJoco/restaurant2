@@ -51,7 +51,7 @@ class DishController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id) 
     {
         // Ellenőrizd, hogy az adatbázisban létezik-e a megadott étel
         $dish = Dish::findOrFail($id);
@@ -71,17 +71,17 @@ class DishController extends Controller
     
         // Ha van új kép
         if ($request->hasFile('image')) {
-            // Ha van meglévő kép, töröljük azt
+            // Régi kép törlése (ha van)
             if ($dish->image) {
                 $oldImagePath = public_path($dish->image);
                 if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath); // Régi kép törlése
+                    unlink($oldImagePath);
                 }
             }
     
             // Új kép feltöltése
             $imagePath = $request->file('image')->store('dishes', 'public');
-            $dish->image = 'storage/' . $imagePath; // Az új kép elérési útjának mentése
+            $dish->image = 'storage/' . $imagePath; // Mentjük az új kép elérési útját
         }
     
         // Adatok mentése az adatbázisba
@@ -93,7 +93,7 @@ class DishController extends Controller
             'dish' => $dish,
         ], 200);
     }
-            
+                
 
     /**
      * Remove the specified resource from storage.

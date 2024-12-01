@@ -1,42 +1,54 @@
 import PropTypes from 'prop-types';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ModifyDishModal({ show, closeModal, dish }) {
   const inputFieldStyle =
-  " text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
-
+    "text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
 
   const [formData, setFormData] = useState({
-    name: dish?.name || '',
-    description: dish?.description || '',
-    price: dish?.price || '',
-    image: dish?.image || '', // Kép URL szövegként
-    imageFile: null, // A feltöltött kép fájl
+    name: '',
+    description: '',
+    price: '',
+    image: '',
+    imageFile: null,
   });
+
+  // Beállítás, ha a "dish" adat változik
+  useEffect(() => {
+    if (dish) {
+      setFormData({
+        name: dish.name || '',
+        description: dish.description || '',
+        price: dish.price || '',
+        image: dish.image || '',
+        imageFile: null,
+      });
+    }
+  }, [dish]);
 
   if (!show) return null;
 
   const handleChange = (e) => {
-    if (e.target.name === 'imageFile' && e.target.files) {
-      setFormData({
-        ...formData,
-        imageFile: e.target.files[0],
-      });
+    const { name, value, files } = e.target;
+    if (name === 'imageFile' && files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        imageFile: files[0],
+      }));
     } else {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value,
-      });
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
   };
 
-  async function submitForm(e) {
+  const submitForm = async (e) => {
     e.preventDefault();
 
     if (!dish || !dish.id) {
-        console.error("Az étel nem található");
-        return;
+      console.error("Az étel nem található");
+      return;
     }
 
     const formDataObj = new FormData();
@@ -45,63 +57,63 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
     formDataObj.append('price', formData.price);
 
     if (formData.imageFile) {
-        formDataObj.append('image', formData.imageFile); // Új kép fájl
-    } else {
-        formDataObj.append('image', formData.image); // Ha nincs új kép, használd a meglévőt
+      formDataObj.append('image', formData.imageFile);
     }
 
     try {
-        const response = await fetch(`/api/dishes/${dish.id}`, {
-            method: "POST", // Laravel PUT requestekhez is elfogadhat POST-ot
-            body: formDataObj,
-        });
+      const response = await fetch(`/api/dishes/${dish.id}`, {
+        method: "POST", // Laravel PUT helyett POST
+        body: formDataObj,
+      });
 
-        const data = await response.json();
-        console.log(data);
-        closeModal();
-        window.location.reload();
+      if (!response.ok) {
+        console.error("Hiba a módosítás során:", response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+      console.log(data);
+      closeModal();
+      window.location.reload();
     } catch (e) {
-        console.error('Hiba a módosítás során:', e);
+      console.error("Hiba a módosítás során:", e);
     }
-}
+  };
 
-  async function deleteDish() {
-    console.log(dish.id)
+  const deleteDish = async () => {
+    if (!dish || !dish.id) {
+      console.error("Az étel nem található");
+      return;
+    }
+
     try {
-        const response = await fetch(`/api/dishes/${dish.id}`, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "delete",
-        });
+      const response = await fetch(`/api/dishes/${dish.id}`, {
+        method: "DELETE",
+      });
 
-        const data = await response.json();
+      if (!response.ok) {
+        console.error("Hiba a törlés során:", response.statusText);
+        return;
+      }
 
-        if (data.errors) {
-          console.log(data.errors);
-        } else {
-         closeModal()
-         window.location.reload();
-
-        }
-
-
-}
-catch (error) {
-  console.error('Error deleting dish:', error.response.data.message || error.message);
-}
-  }
+      const data = await response.json();
+      console.log(data);
+      closeModal();
+      window.location.reload();
+    } catch (e) {
+      console.error("Error deleting dish:", e);
+    }
+  };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center text-gray-100 ">
-      <div className=" rounded shadow-lg w-1/3">
-      <div className="flex justify-between">
-        <h2 className="text-lg font-bold">Étel szerkesztése</h2>
-        <div type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">x</div>
+    <div className="fixed inset-0 flex justify-center items-center text-gray-100">
+      <div className="rounded shadow-lg w-1/3 p-6 bg-gray-800">
+        <div className="flex justify-between mb-4">
+          <h2 className="text-lg font-bold">Étel szerkesztése</h2>
+          <button type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">x</button>
         </div>
-        <form onSubmit={submitForm} className="">
-          <div className="">
+        <form onSubmit={submitForm}>
+          <div>
             <label htmlFor="name" className="block text-sm font-medium">Név</label>
             <input
               type="text"
@@ -112,7 +124,7 @@ catch (error) {
               className={inputFieldStyle}
             />
           </div>
-          <div className="">
+          <div>
             <label htmlFor="description" className="block text-sm font-medium">Leírás</label>
             <textarea
               id="description"
@@ -122,7 +134,7 @@ catch (error) {
               className={inputFieldStyle}
             />
           </div>
-          <div className="">
+          <div>
             <label htmlFor="price" className="block text-sm font-medium">Ár</label>
             <input
               type="number"
@@ -133,15 +145,15 @@ catch (error) {
               className={inputFieldStyle}
             />
           </div>
-          <div className="">
+          <div>
             <label htmlFor="image" className="block text-sm font-medium">Jelenlegi kép:</label>
             <img
-                  src={`http://127.0.0.1:8000/${dish.image}`}
-                  alt={dish.name}
-                  className="w-1/2 h-full object-cover rounded-lg" 
-                />
+              src={`http://127.0.0.1:8000/${formData.image}`}
+              alt="Étel kép"
+              className="w-1/2 h-full object-cover rounded-lg"
+            />
           </div>
-          <div className="">
+          <div>
             <label htmlFor="imageFile" className="block text-sm font-medium">Kép feltöltése</label>
             <input
               type="file"
@@ -151,9 +163,9 @@ catch (error) {
               className={inputFieldStyle}
             />
           </div>
-          <div className="flex justify-end">
-            <button type="submit"  className="bg-blue-500 text-white p-2 rounded">Mentés</button>
-            <button onClick={deleteDish} className="bg-red-500 text-white p-2 rounded">Törlés</button>
+          <div className="flex justify-end mt-4">
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded mr-2">Mentés</button>
+            <button type="button" onClick={deleteDish} className="bg-red-500 text-white p-2 rounded">Törlés</button>
           </div>
         </form>
       </div>

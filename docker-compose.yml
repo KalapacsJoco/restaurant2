@@ -2,12 +2,12 @@ version: '3.9'
 
 services:
   backend:
+    container_name: backend-1
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-
     environment:
       APP_ENV: local
       APP_DEBUG: 'true'
@@ -18,11 +18,14 @@ services:
       - etterem-network
 
   frontend:
+    container_name: frontend-1
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
+    environment:
+      - VITE_BACKEND_URL=http://backend-1:8000
     stdin_open: true
     tty: true
     networks:
@@ -30,3 +33,4 @@ services:
 
 networks:
   etterem-network:
+    driver: bridge
