@@ -1,12 +1,14 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../Context/AppContext";
+import { useTranslation } from "react-i18next"; // 1. Importáljuk a useTranslation hookot
 
 export default function Register() {
+  const { t } = useTranslation(); // 2. Inicializáljuk a fordításokat
   const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const inputFieldStyle =
-    " text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
+    "text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -48,17 +50,17 @@ export default function Register() {
 
   return (
     <>
-      <h1 className="title">Regisztráció</h1>
+      <h1 className="title">{t("register_title")}</h1> {/* 3. "Regisztráció" fordítása */}
 
       <form
         onSubmit={handleRegister}
-        className=" flex flex-col items-center w-1/3 mx-auto space-y-3"
+        className="flex flex-col items-center w-1/3 mx-auto space-y-3"
       >
         <div className="w-full">
           <input
             className={inputFieldStyle}
             type="text"
-            placeholder="Vezetéknév"
+            placeholder={t("first_name_placeholder")} 
             value={formData.first_name}
             onChange={(e) =>
               setFormData({ ...formData, first_name: e.target.value })
@@ -70,7 +72,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="text"
-            placeholder="Keresztnév"
+            placeholder={t("last_name_placeholder")} 
             value={formData.last_name}
             onChange={(e) =>
               setFormData({ ...formData, last_name: e.target.value })
@@ -82,7 +84,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="text"
-            placeholder="Email cím"
+            placeholder={t("email_placeholder")} 
             value={formData.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
@@ -94,7 +96,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="password"
-            placeholder="Jelszó"
+            placeholder={t("password_placeholder")} 
             value={formData.password}
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
@@ -106,7 +108,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="password"
-            placeholder="Jelszó újra"
+            placeholder={t("password_confirmation_placeholder")} 
             value={formData.password_confirmation}
             onChange={(e) =>
               setFormData({
@@ -123,7 +125,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="text"
-            placeholder="Telefonszám"
+            placeholder={t("phone_placeholder")} 
             value={formData.phone}
             onChange={(e) =>
               setFormData({ ...formData, phone: e.target.value })
@@ -135,7 +137,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="text"
-            placeholder="Utca"
+            placeholder={t("street_placeholder")} 
             value={formData.street}
             onChange={(e) =>
               setFormData({ ...formData, street: e.target.value })
@@ -147,7 +149,7 @@ export default function Register() {
           <input
             className={inputFieldStyle}
             type="text"
-            placeholder="Házszám"
+            placeholder={t("house_number_placeholder")} 
             value={formData.street_number}
             onChange={(e) =>
               setFormData({ ...formData, street_number: e.target.value })
@@ -158,7 +160,7 @@ export default function Register() {
           )}
         </div>
         <button className="text-blue-100 bg-transparent border border-blue-100 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-6 py-3">
-          Regisztráció
+          {t("register_button")} {/* 12. "Regisztráció" fordítása */}
         </button>
       </form>
     </>

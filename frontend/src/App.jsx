@@ -9,6 +9,7 @@ import { AppContext } from "./Context/AppContext";
 import CreateDish from "./Pages/Dishes/CreateDish";
 import Index from "./Pages/Dishes/Index";
 import Order from "./Pages/Order";
+import './i18n';
 // import Create from "./Pages/Posts/Create";
 
 export default function App() {

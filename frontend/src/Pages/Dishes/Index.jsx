@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
 import ModifyDishModal from "../../Components/ModifyDishModal";
+import { useTranslation } from "react-i18next"; // 1. Importáljuk a useTranslation hookot
 
 function Dishes() {
+  const { t } = useTranslation(); // 2. Inicializáljuk a fordításokat
   const [dishes, setDishes] = useState([]);
   const user = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
@@ -11,7 +12,6 @@ function Dishes() {
   const { setCart } = useContext(AppContext);
   const [qty, setQty] = useState({}); // Mennyiségek állapota
 
-  // Ételek betöltése
   useEffect(() => {
     const fetchDishes = async () => {
       try {
@@ -19,18 +19,17 @@ function Dishes() {
         const data = await response.json();
         setDishes(data);
 
-        // Kezdeti mennyiségek beállítása minden ételhez
         const initialQty = {};
         data.forEach((dish) => {
           initialQty[dish.id] = 1; // Alapértelmezett érték: 1
         });
         setQty(initialQty);
       } catch (error) {
-        console.error("Error fetching dishes:", error);
+        console.error(t("fetch_dishes_error"), error); // 3. "Ételek betöltése hiba" fordítása
       }
     };
     fetchDishes();
-  }, []);
+  }, [t]);
 
   const handleEditClick = (dish) => {
     setSelectedDish(dish);
@@ -38,7 +37,7 @@ function Dishes() {
   };
 
   const addToCart = (dish) => {
-    const dishQty = qty[dish.id] || 1; // Alapértelmezett érték biztosítása
+    const dishQty = qty[dish.id] || 1;
     if (dishQty > 0) {
       setCart((prevCart) => {
         if (prevCart[dish.id]) {
@@ -60,28 +59,29 @@ function Dishes() {
         }
       });
     } else {
-      console.warn("Hibás mennyiség");
+      console.warn(t("invalid_quantity")); // 4. "Hibás mennyiség" fordítása
     }
   };
 
   return (
-<div className="flex justify-center overflow-y-auto"> 
-  {!openModal && (
-    <div className="flex justify-center w-3/5  max-h-[90vh] relative  h-screen"> 
-      <ul className="flex flex-col w-full overscroll-contain">
-          {dishes.map((dish) => (
-            
-            <li
-              key={dish.id}
-              className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 p-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
-            >
+    <div className="flex justify-center overflow-y-auto">
+      {!openModal && (
+        <div className="flex justify-center w-3/5 max-h-[90vh] relative h-screen">
+          <ul className="flex flex-col w-full overscroll-contain">
+            {dishes.map((dish) => (
+              <li
+                key={dish.id}
+                className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 p-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
+              >
                 <img
                   src={`http://127.0.0.1:8000/${dish.image}`}
                   alt={dish.name}
-                  className="w-1/2 h-full object-cover rounded-lg" 
+                  className="w-1/2 h-full object-cover rounded-lg"
                 />
                 <div className="p-4">
-                  <h2 className="text-lg font-bold text-yellow-500">{dish.name}</h2> 
+                  <h2 className="text-lg font-bold text-yellow-500">
+                    {dish.name}
+                  </h2>
                   <p className="text-gray-400">{dish.description}</p>
 
                   {user && (
@@ -93,10 +93,10 @@ function Dishes() {
                       {user.user ? (
                         user.user.is_admin ? (
                           <button
-                            className="text-green-100 bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 transition-colors duration-200" 
+                            className="text-green-100 bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 transition-colors duration-200"
                             onClick={() => handleEditClick(dish)}
                           >
-                            Módosítás
+                            {t("edit")} {/* 5. "Módosítás" fordítása */}
                           </button>
                         ) : (
                           <span>
@@ -113,10 +113,10 @@ function Dishes() {
                               }}
                             />
                             <button
-                              className="text-blue-100 bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 ml-4 transition-colors duration-200" 
+                              className="text-blue-100 bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 ml-4 transition-colors duration-200"
                               onClick={() => addToCart(dish)}
                             >
-                              Kosárba
+                              {t("add_to_cart")} {/* 6. "Kosárba" fordítása */}
                             </button>
                           </span>
                         )
@@ -130,8 +130,7 @@ function Dishes() {
         </div>
       )}
 
-     
-{openModal && (
+      {openModal && (
         <>
           <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
           <div className="fixed inset-0 z-50 flex justify-center items-center">

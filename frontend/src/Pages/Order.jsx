@@ -2,11 +2,13 @@ import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../Context/AppContext";
 import ModifyUser from "../Components/ModifyUserModal";
 import SuccessModal from "../Components/SuccessModal";
+import { useTranslation } from "react-i18next"; // 1. Importáljuk a useTranslation hookot
 
 function Order() {
   const { cart, setCart, user, token } = useContext(AppContext);
+  const { t } = useTranslation(); // 2. Inicializáljuk a fordításokat
   const [openModal, setOpenModal] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // SuccessModal állapota
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const [qty, setQty] = useState(() => {
     const initialQty = {};
@@ -36,11 +38,11 @@ function Order() {
 
   const submitOrder = async () => {
     if (!user) {
-      console.error("Nincs bejelentkezve a felhasználó");
+      console.error(t("user_not_logged_in")); // 3. Felhasználó nincs bejelentkezve fordítása
       return;
     }
     if (Object.keys(cart).length === 0) {
-      console.error("A kosár üres");
+      console.error(t("cart_empty")); // 4. A kosár üres fordítása
       return;
     }
 
@@ -67,14 +69,14 @@ function Order() {
 
       const data = await response.json();
       if (response.ok) {
-        console.log("Rendelés sikeresen elküldve:", data);
+        console.log(t("order_successful"), data); // 5. Rendelés sikeres fordítása
         setCart({});
-        setIsSuccessModalOpen(true); // SuccessModal megnyitása
+        setIsSuccessModalOpen(true);
       } else {
-        console.error("Hiba a rendelés során:", data);
+        console.error(t("order_error"), data); // 6. Rendelés hiba fordítása
       }
     } catch (error) {
-      console.error("Hiba a rendelés beküldése során:", error);
+      console.error(t("order_submission_error"), error); // 7. Rendelés beküldési hiba fordítása
     }
   };
 
@@ -82,16 +84,16 @@ function Order() {
     <>
       <section className="flex text-gray-100 w-full h-1/2">
         <article className="ml-11 flex flex-col text-gray-100 w-1/2 justify-center items-center">
-          <h1>Rendelés</h1>
+          <h1>{t("order")}</h1> {/* 8. "Rendelés" fordítása */}
           <div>
             <table className="table-auto">
               <thead>
                 <tr>
-                  <th>Sorszám</th>
-                  <th>Étel neve</th>
-                  <th>Mennyiség</th>
-                  <th>Egységár</th>
-                  <th>Összesen</th>
+                  <th>{t("serial_number")}</th> {/* 9. "Sorszám" fordítása */}
+                  <th>{t("dish_name")}</th> {/* 10. "Étel neve" fordítása */}
+                  <th>{t("quantity")}</th> {/* 11. "Mennyiség" fordítása */}
+                  <th>{t("unit_price")}</th> {/* 12. "Egységár" fordítása */}
+                  <th>{t("total")}</th> {/* 13. "Összesen" fordítása */}
                 </tr>
               </thead>
               <tbody>
@@ -120,14 +122,14 @@ function Order() {
                         onClick={() => deleteItem(key)}
                         className="text-red-100 bg-transparent border border-red-500 rounded-lg shadow hover:bg-red-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
                       >
-                        Törlés
+                        {t("delete")} {/* 14. "Törlés" fordítása */}
                       </button>
                     </td>
                   </tr>
                 ))}
                 <tr>
                   <td colSpan="4" className="text-right font-bold">
-                    Összesen:
+                    {t("grand_total")}: {/* 15. "Összesen" fordítása */}
                   </td>
                   <td className="text-lg">
                     {Object.values(totalPrices).reduce((acc, price) => acc + price, 0)}{" "}
@@ -141,7 +143,7 @@ function Order() {
             className="text-green-100 bg-transparent border border-green-500 rounded-lg shadow hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
             onClick={submitOrder}
           >
-            Megrendelem
+            {t("submit_order")} {/* 16. "Megrendelem" fordítása */}
           </button>
         </article>
 
@@ -156,27 +158,26 @@ function Order() {
             <>
               {user ? (
                 <>
-                  <ul>Név: {user.first_name + " " + user.last_name}</ul>
-                  <ul>Email: {user.email}</ul>
-                  <ul>Telefonszám: {user.phone}</ul>
-                  <ul>Utca: {user.street}</ul>
-                  <ul>Házszám: {user.street_number}</ul>
+                  <ul>{t("name")}: {user.first_name + " " + user.last_name}</ul>
+                  <ul>{t("email")}: {user.email}</ul>
+                  <ul>{t("phone")}: {user.phone}</ul>
+                  <ul>{t("street")}: {user.street}</ul>
+                  <ul>{t("house_number")}: {user.street_number}</ul>
                   <button
                     onClick={() => setOpenModal(true)}
                     className="text-blue-100 bg-transparent border border-blue-500 rounded-lg shadow hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 px-4  ml-4 my-2 transition-colors duration-200"
                   >
-                    Módosítás
+                    {t("modify")} {/* 17. "Módosítás" fordítása */}
                   </button>
                 </>
               ) : (
-                <p>Nincs felhasználói adat.</p>
+                <p>{t("no_user_data")}</p> 
               )}
             </>
           )}
         </article>
       </section>
 
-      {/* Success Modal */}
       <SuccessModal
         show={isSuccessModalOpen}
         onClose={() => setIsSuccessModalOpen(false)}

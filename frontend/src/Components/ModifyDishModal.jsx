@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next'; // 1. Importáljuk a useTranslation hookot
 
 export default function ModifyDishModal({ show, closeModal, dish }) {
+  const { t } = useTranslation(); // 2. Inicializáljuk a fordításokat
   const inputFieldStyle =
     "text-gray-100 w-full p-2 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75";
 
@@ -13,7 +15,6 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
     imageFile: null,
   });
 
-  // Beállítás, ha a "dish" adat változik
   useEffect(() => {
     if (dish) {
       setFormData({
@@ -47,7 +48,7 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
     e.preventDefault();
 
     if (!dish || !dish.id) {
-      console.error("Az étel nem található");
+      console.error(t("dish_not_found")); // 3. "Az étel nem található" fordítása
       return;
     }
 
@@ -62,12 +63,12 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
 
     try {
       const response = await fetch(`/api/dishes/${dish.id}`, {
-        method: "POST", // Laravel PUT helyett POST
+        method: "POST",
         body: formDataObj,
       });
 
       if (!response.ok) {
-        console.error("Hiba a módosítás során:", response.statusText);
+        console.error(t("modify_error"), response.statusText); // 4. "Hiba a módosítás során" fordítása
         return;
       }
 
@@ -76,13 +77,13 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
       closeModal();
       window.location.reload();
     } catch (e) {
-      console.error("Hiba a módosítás során:", e);
+      console.error(t("modify_error"), e); // 5. "Hiba a módosítás során" fordítása
     }
   };
 
   const deleteDish = async () => {
     if (!dish || !dish.id) {
-      console.error("Az étel nem található");
+      console.error(t("dish_not_found")); // 6. "Az étel nem található" fordítása
       return;
     }
 
@@ -92,7 +93,7 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
       });
 
       if (!response.ok) {
-        console.error("Hiba a törlés során:", response.statusText);
+        console.error(t("delete_error"), response.statusText); // 7. "Hiba a törlés során" fordítása
         return;
       }
 
@@ -101,7 +102,7 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
       closeModal();
       window.location.reload();
     } catch (e) {
-      console.error("Error deleting dish:", e);
+      console.error(t("delete_error"), e); // 8. "Hiba a törlés során" fordítása
     }
   };
 
@@ -109,12 +110,20 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
     <div className="fixed inset-0 flex justify-center items-center text-gray-100">
       <div className="rounded shadow-lg w-1/3 p-6 bg-gray-800">
         <div className="flex justify-between mb-4">
-          <h2 className="text-lg font-bold">Étel szerkesztése</h2>
-          <button type="button" onClick={closeModal} className="ml-4 bg-red-500 text-white p-2 rounded">x</button>
+          <h2 className="text-lg font-bold">{t("edit_dish")}</h2> {/* 9. "Étel szerkesztése" fordítása */}
+          <button
+            type="button"
+            onClick={closeModal}
+            className="ml-4 bg-red-500 text-white p-2 rounded"
+          >
+            {t("close")} {/* 10. "Bezárás" fordítása */}
+          </button>
         </div>
         <form onSubmit={submitForm}>
           <div>
-            <label htmlFor="name" className="block text-sm font-medium">Név</label>
+            <label htmlFor="name" className="block text-sm font-medium">
+              {t("name")} {/* 11. "Név" fordítása */}
+            </label>
             <input
               type="text"
               id="name"
@@ -125,7 +134,9 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
             />
           </div>
           <div>
-            <label htmlFor="description" className="block text-sm font-medium">Leírás</label>
+            <label htmlFor="description" className="block text-sm font-medium">
+              {t("description")} {/* 12. "Leírás" fordítása */}
+            </label>
             <textarea
               id="description"
               name="description"
@@ -135,7 +146,9 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
             />
           </div>
           <div>
-            <label htmlFor="price" className="block text-sm font-medium">Ár</label>
+            <label htmlFor="price" className="block text-sm font-medium">
+              {t("price")} {/* 13. "Ár" fordítása */}
+            </label>
             <input
               type="number"
               id="price"
@@ -146,15 +159,19 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
             />
           </div>
           <div>
-            <label htmlFor="image" className="block text-sm font-medium">Jelenlegi kép:</label>
+            <label htmlFor="image" className="block text-sm font-medium">
+              {t("current_image")} {/* 14. "Jelenlegi kép" fordítása */}
+            </label>
             <img
               src={`http://127.0.0.1:8000/${formData.image}`}
-              alt="Étel kép"
+              alt={t("dish_image")} // 15. "Étel kép" fordítása
               className="w-1/2 h-full object-cover rounded-lg"
             />
           </div>
           <div>
-            <label htmlFor="imageFile" className="block text-sm font-medium">Kép feltöltése</label>
+            <label htmlFor="imageFile" className="block text-sm font-medium">
+              {t("upload_image")} {/* 16. "Kép feltöltése" fordítása */}
+            </label>
             <input
               type="file"
               id="imageFile"
@@ -164,8 +181,16 @@ export default function ModifyDishModal({ show, closeModal, dish }) {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded mr-2">Mentés</button>
-            <button type="button" onClick={deleteDish} className="bg-red-500 text-white p-2 rounded">Törlés</button>
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded mr-2">
+              {t("save")} {/* 17. "Mentés" fordítása */}
+            </button>
+            <button
+              type="button"
+              onClick={deleteDish}
+              className="bg-red-500 text-white p-2 rounded"
+            >
+              {t("delete")} {/* 18. "Törlés" fordítása */}
+            </button>
           </div>
         </form>
       </div>
