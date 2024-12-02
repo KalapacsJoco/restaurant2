@@ -1,54 +1,58 @@
-# Online Étterem Rendelői Felület
+# Online Restaurant Ordering Platform
 
-Ez az alkalmazás egy Laravel és React alapú webes platform, amely lehetővé teszi az ügyfelek számára, hogy online ételrendeléseket végezzenek. Tartalmaz egy adminisztrációs felületet az ételek és felhasználók kezelésére, valamint modern felhasználói élményt nyújt Tailwind CSS segítségével.
+This multilanguage application is a Laravel and React-based web platform that allows customers to place food orders online. It includes an admin interface for managing dishes and users and provides a modern user experience powered by Tailwind CSS.
 
-## Használt technológiák
-- **Laravel**: Backend keretrendszer.
-- **React**: Frontend felület.
-- **Docker**: Konténerizált környezet futtatása.
-- **SQLite**: Könnyen hordozható adatbázis.
-- **Tailwind CSS**: Letisztult és reszponzív stílusok.
+## Technologies Used
+- **Laravel**: Backend framework.
+- **React**: Frontend interface.
+- **Docker**: Containerized environment execution.
+- **SQLite**: Lightweight and portable database.
+- **Tailwind CSS**: Clean and responsive styling.
 
-## Főbb funkciók
-- Online ételrendelési lehetőség.
-- Felhasználói bejelentkezés és regisztráció.
-- Adminisztrációs felület ételek hozzáadásához, szerkesztéséhez és kezeléséhez.
+## Key Features
+- Online food ordering capability.
+- User login and registration.
+- Admin interface for adding, editing, and managing dishes.
+- Multilingual Support: The platform supports multiple languages (Hungarian, English, Romanian) to cater to a wider audience.
 
-## Telepítési útmutató (Docker)
-A projekt a Docker Hub-ról könnyen letölthető a következő parancsokkal:
+## Installation Guide (Docker)
+The project can be easily downloaded from Docker Hub using the following commands:
 
 - docker pull kalapom/etterem-frontend:latest
 - docker pull kalapom/etterem-backend:latest
 
-Az alábbi parancsokkal indíthatja el a frontendet és a backendet helyi környezetben a Docker segítségével:
+Run the frontend and backend locally using Docker with these commands:
 
 - docker network create etterem-network
 - docker run -d --name backend --network etterem-network -p 8000:8000 kalapom/etterem-backend:latest
 - docker run -d --name frontend --network etterem-network -p 5173:5173 kalapom/etterem-frontend:latest
 
-**Megjegyzés:** A Play with Docker platform dinamikusan generált URL-eket és portokat használ, amelyek nem támogatják a projekt konfigurációit. Ezért ezen a platformon nem működik megfelelően. Ugyanakkor bármely Docker-támogatott környezetben (például Docker Desktop) a rendszer probléma nélkül fut.
+**Note:** The Play with Docker platform uses dynamically generated URLs and ports, which are not compatible with the project configurations. Therefore, it will not work correctly on this platform. However, the system runs without issues in any Docker-supported environment, such as Docker Desktop.
 
-## Tesztelési felhasználók
+## Test Users
 
-Az alábbi adminisztrátori és felhasználói adatok kizárólag a rendszer kipróbálására szolgálnak:
+The following administrator and user credentials are provided exclusively for testing the system:
 
-- Adminisztrátor:
+- Administrator:
   - **Email:** sasa@gmail.com
-  - **Jelszó:** 123
+  - **password:** 123
 
-- Felhasználó:
+- User:
   - **Email:** sanyi@gmail.com
-  - **Jelszó:** 123
+  - **password:** 123
 
-Új felhasználók regisztrálására is lehetőség van.
+New users can also register.
 
-## További tervek
-- **Reszponzív design:** Mobilbarát elrendezés kialakítása a Tailwind CSS segítségével.
-- **Értesítések:** Automatikus email-értesítések integrálása a rendelési állapotokról (pl. rendelés visszaigazolása).
+## Known Issues
+- In the Docker containerized version, the CreateDish feature does not upload images. A fix is under development.
 
-## Demo képek
+## Future Plans
+- **Responsive Design:** Implementing a mobile-friendly layout using Tailwind CSS.
+- **Notifications:** Integrating automatic email notifications for order statuses (e.g., order confirmation).
 
-![Főoldal](./screenshots/dishes.PNG)
-![Adminisztrációs felület](./screenshots/admin.PNG)
-![Rendelési felület](./screenshots/order.PNG)
+## Demo images
+
+![Dishes](./screenshots/dishes.PNG)
+![Admin Interface](./screenshots/admin.PNG)
+![Order interface](./screenshots/order.PNG)
 

@@ -35,7 +35,7 @@ function Dishes() {
     };
     
     fetchDishes();
-  }, [i18n.language]);
+  }, [i18n.language, t]);
 
   const handleEditClick = (dish) => {
     setSelectedDish(dish);
