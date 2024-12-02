@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Függőségek telepítése (csak a production környezethez)
-RUN npm install --only=production
+RUN npm install 
 
 # Alkalmazás fájlok másolása
 COPY . .
