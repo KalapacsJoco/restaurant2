@@ -20,4 +20,9 @@ class Dish extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function translations()
+    {
+        return $this->hasMany(DishTranslation::class);
+    }
 }

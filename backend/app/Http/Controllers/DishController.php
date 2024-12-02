@@ -12,11 +12,25 @@ class DishController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $dishes = Dish::all();
+        // Alapértelmezett nyelv magyar, ha nincs megadva
+        $language = $request->get('lang', 'hu');
+    
+        // Az ételek és a megfelelő nyelvű fordítások betöltése
+        $dishes = Dish::with(['translations' => function ($query) use ($language) {
+            $query->where('language', $language);
+        }])->get();
+    
+        // Csak a releváns fordítást adjuk vissza
+        $dishes->each(function ($dish) use ($language) {
+            $dish->translation = $dish->translations->firstWhere('language', $language);
+            unset($dish->translations); // Eltávolítjuk a teljes translations gyűjteményt
+        });
+    
         return response()->json($dishes);
     }
+    
 
     /**
      * Store a newly created resource in storage.

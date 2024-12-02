@@ -4,7 +4,7 @@ import ModifyDishModal from "../../Components/ModifyDishModal";
 import { useTranslation } from "react-i18next"; // 1. Importáljuk a useTranslation hookot
 
 function Dishes() {
-  const { t } = useTranslation(); // 2. Inicializáljuk a fordításokat
+  const { i18n, t } = useTranslation(); // 2. Inicializáljuk a fordításokat
   const [dishes, setDishes] = useState([]);
   const user = useContext(AppContext);
   const [openModal, setOpenModal] = useState(false);
@@ -15,21 +15,27 @@ function Dishes() {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const response = await fetch("/api/dishes");
+        // Nyelv lekérése az i18n beállításokból
+        const language = i18n.language; 
+    
+        // API hívás a megfelelő nyelvű fordításokhoz
+        const response = await fetch(`/api/dishes?lang=${language}`);
         const data = await response.json();
         setDishes(data);
-
+    
+        // Alapértelmezett mennyiségek inicializálása
         const initialQty = {};
         data.forEach((dish) => {
           initialQty[dish.id] = 1; // Alapértelmezett érték: 1
         });
         setQty(initialQty);
       } catch (error) {
-        console.error(t("fetch_dishes_error"), error); // 3. "Ételek betöltése hiba" fordítása
+        console.error(t("fetch_dishes_error"), error); // "Ételek betöltése hiba" fordítása
       }
     };
+    
     fetchDishes();
-  }, [t]);
+  }, [i18n.language]);
 
   const handleEditClick = (dish) => {
     setSelectedDish(dish);
@@ -68,64 +74,66 @@ function Dishes() {
       {!openModal && (
         <div className="flex justify-center w-3/5 max-h-[90vh] relative h-screen">
           <ul className="flex flex-col w-full overscroll-contain">
-            {dishes.map((dish) => (
-              <li
-                key={dish.id}
-                className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 p-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
+          {dishes.map((dish) => (
+  <li
+    key={dish.id}
+    className="flex flex-row items-center gap-4 justify-between border border-gray-700 rounded-lg mr-4 my-4 p-4 bg-gray-900 shadow-md transform hover:scale-105 transition-transform duration-200"
+  >
+    <img
+      src={`http://127.0.0.1:8000/${dish.image}`}
+      alt={dish.translation?.name || dish.name} // Fordítás vagy alapértelmezett név
+      className="w-1/2 h-full object-cover rounded-lg"
+    />
+    <div className="p-4">
+      <h2 className="text-lg font-bold text-yellow-500">
+        {dish.translation?.name || dish.name} {/* Fordítás vagy alapértelmezett név */}
+      </h2>
+      <p className="text-gray-400">
+        {dish.translation?.description || dish.description} {/* Fordítás vagy alapértelmezett leírás */}
+      </p>
+
+      {user && (
+        <div className="flex my-3">
+          <h3 className="text-gray-400 pr-5 text-lg">
+            {dish.price} RON
+          </h3>
+
+          {user.user ? (
+            user.user.is_admin ? (
+              <button
+                className="text-green-100 bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 transition-colors duration-200"
+                onClick={() => handleEditClick(dish)}
               >
-                <img
-                  src={`http://127.0.0.1:8000/${dish.image}`}
-                  alt={dish.name}
-                  className="w-1/2 h-full object-cover rounded-lg"
+                {t("edit")} {/* "Módosítás" fordítása */}
+              </button>
+            ) : (
+              <span>
+                <input
+                  className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+                  type="number"
+                  value={qty[dish.id]}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setQty((prevQty) => ({
+                      ...prevQty,
+                      [dish.id]: value,
+                    }));
+                  }}
                 />
-                <div className="p-4">
-                  <h2 className="text-lg font-bold text-yellow-500">
-                    {dish.name}
-                  </h2>
-                  <p className="text-gray-400">{dish.description}</p>
-
-                  {user && (
-                    <div className="flex my-3">
-                      <h3 className="text-gray-400 pr-5 text-lg">
-                        {dish.price} RON
-                      </h3>
-
-                      {user.user ? (
-                        user.user.is_admin ? (
-                          <button
-                            className="text-green-100 bg-green-600 hover:bg-green-700 rounded-lg px-4 py-2 transition-colors duration-200"
-                            onClick={() => handleEditClick(dish)}
-                          >
-                            {t("edit")} {/* 5. "Módosítás" fordítása */}
-                          </button>
-                        ) : (
-                          <span>
-                            <input
-                              className="text-gray-300 w-20 border border-gray-300 rounded-md caret-amber-100 bg-transparent placeholder-gray-100 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
-                              type="number"
-                              value={qty[dish.id]}
-                              onChange={(e) => {
-                                const value = Number(e.target.value);
-                                setQty((prevQty) => ({
-                                  ...prevQty,
-                                  [dish.id]: value,
-                                }));
-                              }}
-                            />
-                            <button
-                              className="text-blue-100 bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 ml-4 transition-colors duration-200"
-                              onClick={() => addToCart(dish)}
-                            >
-                              {t("add_to_cart")} {/* 6. "Kosárba" fordítása */}
-                            </button>
-                          </span>
-                        )
-                      ) : null}
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
+                <button
+                  className="text-blue-100 bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 ml-4 transition-colors duration-200"
+                  onClick={() => addToCart(dish)}
+                >
+                  {t("add_to_cart")} {/* "Kosárba" fordítása */}
+                </button>
+              </span>
+            )
+          ) : null}
+        </div>
+      )}
+    </div>
+  </li>
+))}
           </ul>
         </div>
       )}
